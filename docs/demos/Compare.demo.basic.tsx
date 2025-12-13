@@ -1,5 +1,5 @@
 import { Compare } from '@gfazioli/mantine-compare';
-import { Box, Paper, Text, Title } from '@mantine/core';
+import { Paper, Text, Title } from '@mantine/core';
 
 function Demo() {
   return (
