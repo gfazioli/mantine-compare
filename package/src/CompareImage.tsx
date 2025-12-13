@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { IconArrowsLeftRight } from '@tabler/icons-react';
 import {
   ActionIcon,
@@ -23,7 +23,6 @@ export type CompareImageStylesNames =
 
 export type CompareImageCssVariables = {
   root: '--compare-image-aspect-ratio';
-  slider: '--compare-image-slider-position';
 };
 
 export interface CompareImageProps extends BoxProps, StylesApiProps<CompareImageFactory> {
@@ -62,9 +61,6 @@ const defaultProps: Partial<CompareImageProps> = {
 const varsResolver = createVarsResolver<CompareImageFactory>((_, { aspectRatio }) => ({
   root: {
     '--compare-image-aspect-ratio': aspectRatio || '16/9',
-  },
-  slider: {
-    '--compare-image-slider-position': undefined,
   },
 }));
 
@@ -106,7 +102,7 @@ export const CompareImage = factory<CompareImageFactory>((_props, ref) => {
 
   const updatePosition = useCallback(
     (clientX: number) => {
-      if (!isDragging.current || !containerRef.current) {
+      if (!containerRef.current) {
         return;
       }
 
@@ -121,37 +117,47 @@ export const CompareImage = factory<CompareImageFactory>((_props, ref) => {
     [onPositionChange]
   );
 
-  const handleMouseDown = useCallback(() => {
-    isDragging.current = true;
-  }, []);
-
-  const handleMouseUp = useCallback(() => {
-    isDragging.current = false;
-  }, []);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
       updatePosition(e.clientX);
-    };
+    },
+    [updatePosition]
+  );
 
-    const handleTouchMove = (e: TouchEvent) => {
+  const handleTouchMove = useCallback(
+    (e: TouchEvent) => {
       if (e.touches.length > 0) {
         updatePosition(e.touches[0].clientX);
       }
-    };
+    },
+    [updatePosition]
+  );
 
+  const handleMouseUp = useCallback(() => {
+    isDragging.current = false;
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+  }, [handleMouseMove]);
+
+  const handleTouchEnd = useCallback(() => {
+    isDragging.current = false;
+    document.removeEventListener('touchmove', handleTouchMove, {
+      passive: false,
+    } as EventListenerOptions);
+    document.removeEventListener('touchend', handleTouchEnd);
+  }, [handleTouchMove]);
+
+  const handleMouseDown = useCallback(() => {
+    isDragging.current = true;
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('touchmove', handleTouchMove);
-    document.addEventListener('touchend', handleMouseUp);
+  }, [handleMouseMove, handleMouseUp]);
 
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('touchend', handleMouseUp);
-    };
-  }, [handleMouseUp, updatePosition]);
+  const handleTouchStart = useCallback(() => {
+    isDragging.current = true;
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd);
+  }, [handleTouchMove, handleTouchEnd]);
 
   return (
     <Box
@@ -190,7 +196,7 @@ export const CompareImage = factory<CompareImageFactory>((_props, ref) => {
           left: `${position}%`,
         }}
         onMouseDown={handleMouseDown}
-        onTouchStart={handleMouseDown}
+        onTouchStart={handleTouchStart}
       >
         <Box {...getStyles('sliderLine')} />
         <Box {...getStyles('sliderButton')}>
