@@ -1,13 +1,11 @@
-# Mantine Json Tree Component
-
-<img width="2752" height="1536" alt="Mantine Json Tree" src="https://github.com/user-attachments/assets/26d79eca-a2e8-4d5c-a62f-6bf075573a16" />
+# Mantine Compare Component
 
 <div align="center">
   
-  [![NPM version](https://img.shields.io/npm/v/%40gfazioli%2Fmantine-json-tree?style=for-the-badge)](https://www.npmjs.com/package/@gfazioli/mantine-json-tree)
-  [![NPM Downloads](https://img.shields.io/npm/dm/%40gfazioli%2Fmantine-json-tree?style=for-the-badge)](https://www.npmjs.com/package/@gfazioli/mantine-json-tree)
-  [![NPM Downloads](https://img.shields.io/npm/dy/%40gfazioli%2Fmantine-json-tree?style=for-the-badge&label=%20&color=f90)](https://www.npmjs.com/package/@gfazioli/mantine-json-tree)
-  ![NPM License](https://img.shields.io/npm/l/%40gfazioli%2Fmantine-json-tree?style=for-the-badge)
+  [![NPM version](https://img.shields.io/npm/v/%40gfazioli%2Fmantine-compare?style=for-the-badge)](https://www.npmjs.com/package/@gfazioli/mantine-compare)
+  [![NPM Downloads](https://img.shields.io/npm/dm/%40gfazioli%2Fmantine-compare?style=for-the-badge)](https://www.npmjs.com/package/@gfazioli/mantine-compare)
+  [![NPM Downloads](https://img.shields.io/npm/dy/%40gfazioli%2Fmantine-compare?style=for-the-badge&label=%20&color=f90)](https://www.npmjs.com/package/@gfazioli/mantine-compare)
+  ![NPM License](https://img.shields.io/npm/l/%40gfazioli%2Fmantine-compare?style=for-the-badge)
 
 </div>
 
@@ -18,12 +16,12 @@ This component is created on top of the [Mantine](https://mantine.dev/) library.
 [![Mantine UI Library](https://img.shields.io/badge/-MANTINE_UI_LIBRARY-blue?style=for-the-badge&labelColor=black&logo=mantine
 )](https://mantine.dev/)
 
-An interactive JSON tree viewer component built with Mantine's Tree component. Features collapsible nodes, syntax highlighting with type-specific colors, copy-to-clipboard functionality, item count badges, configurable expansion depth, and smooth animations. Perfect for debugging API responses, exploring complex data structures, and developer tools.
+A clean, flexible comparison component for showcasing before/after states, light vs dark themes, or alternative designs. Features a two-panel layout with support for any React content, responsive stacking, configurable aspect ratios, keyboard navigation, and full accessibility with ARIA labels. Perfect for design showcases, A/B testing visualizations, and documentation.
 
 [![Mantine Extensions](https://img.shields.io/badge/-Watch_the_Video-blue?style=for-the-badge&labelColor=black&logo=youtube
 )](https://www.youtube.com/playlist?list=PL85tTROKkZrWyqCcmNCdWajpx05-cTal4)
 [![Demo and Documentation](https://img.shields.io/badge/-Demo_%26_Documentation-blue?style=for-the-badge&labelColor=black&logo=typescript
-)](https://gfazioli.github.io/mantine-json-tree/)
+)](https://gfazioli.github.io/mantine-compare/)
 [![Mantine Extensions HUB](https://img.shields.io/badge/-Mantine_Extensions_Hub-blue?style=for-the-badge&labelColor=blue
 )](https://mantine-extensions.vercel.app/)
 
@@ -33,32 +31,66 @@ An interactive JSON tree viewer component built with Mantine's Tree component. F
 ## Installation
 
 ```sh
-npm install @gfazioli/mantine-json-tree
+npm install @gfazioli/mantine-compare
 ```
 or 
 
 ```sh
-yarn add @gfazioli/mantine-json-tree
+yarn add @gfazioli/mantine-compare
 ```
 
 After installation import package styles at the root of your application:
 
 ```tsx
-import '@gfazioli/mantine-json-tree/styles.css';
+import '@gfazioli/mantine-compare/styles.css';
 ```
 
 ## Usage
 
 ```tsx
-import { JsonTree } from '@gfazioli/mantine-json-tree';
+import { Compare } from '@gfazioli/mantine-compare';
 
 function Demo() {
-  return <JsonTree data={{ key: "value" }} />;
+  return (
+    <Compare
+      before={<img src="/before.jpg" alt="Before" />}
+      after={<img src="/after.jpg" alt="After" />}
+      showLabels
+      radius="md"
+      withBorder
+    />
+  );
 }
 ```
 
+## Features
+
+- 🖼️ **Flexible Content**: Each panel accepts any ReactNode - images, components, text, or interactive elements
+- 📐 **Layout Controls**: Fixed aspect ratios, fit modes (contain, cover, fill), and responsive stacking
+- 🎨 **Mantine Integration**: Supports radius, shadow, withBorder, and padding props from Mantine
+- ⌨️ **Keyboard Navigation**: Navigate between panels using arrow keys
+- ♿ **Accessible**: Full ARIA labeling for screen readers and assistive technologies
+- 📱 **Responsive**: Automatic stacking on smaller screens with configurable breakpoints
+- 🎯 **TypeScript**: Fully typed with comprehensive TypeScript support
+
+## Props
+
+- `before` - Content for the "before" or "left" panel (ReactNode)
+- `after` - Content for the "after" or "right" panel (ReactNode)
+- `beforeLabel` - Optional label for the before panel
+- `afterLabel` - Optional label for the after panel
+- `radius` - Border radius (default: 'sm')
+- `shadow` - Box shadow (default: 'none')
+- `withBorder` - Show border (default: false)
+- `padding` - Padding inside panels (default: 'md')
+- `aspectRatio` - Fixed aspect ratio like '16/9' or '1/1'
+- `fit` - How content fits: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down' (default: 'cover')
+- `minHeight` - Minimum height for the container
+- `orientation` - 'horizontal' or 'vertical' (default: 'horizontal')
+- `stackAt` - Breakpoint for responsive stacking (default: 'sm')
+- `showLabels` - Show visual labels on panels (default: false)
+- `ariaLabel` - ARIA label for the comparison (default: 'Comparison view')
+
 <div align="center">
   
-[![Star History Chart](https://api.star-history.com/svg?repos=gfazioli/mantine-json-tree&type=Timeline)](https://www.star-history.com/#gfazioli/mantine-json-tree&Timeline)
-
-https://github.com/user-attachments/assets/ce2b1ba2-51f7-43d5-8477-6d8fee103fa3
+[![Star History Chart](https://api.star-history.com/svg?repos=gfazioli/mantine-compare&type=Timeline)](https://www.star-history.com/#gfazioli/mantine-compare&Timeline)

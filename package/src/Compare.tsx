@@ -112,8 +112,6 @@ export const defaultProps: Partial<CompareProps> = {
   stackAt: 'sm',
   ariaLabel: 'Comparison view',
   showLabels: false,
-  beforeLabel: 'Before',
-  afterLabel: 'After',
 };
 
 const varsResolver = createVarsResolver<CompareFactory>(
@@ -183,6 +181,9 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
     varsResolver,
   });
 
+  const beforePanelRef = React.useRef<HTMLDivElement>(null);
+  const afterPanelRef = React.useRef<HTMLDivElement>(null);
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     // Allow keyboard navigation between panels
     if (e.key === 'Tab') {
@@ -190,9 +191,9 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
       return;
     }
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-      const panels = e.currentTarget.querySelectorAll('[data-compare-panel]');
-      const focusedIndex = Array.from(panels).findIndex(
-        (panel) => panel === document.activeElement || panel.contains(document.activeElement)
+      const panels = [beforePanelRef.current, afterPanelRef.current].filter(Boolean);
+      const focusedIndex = panels.findIndex(
+        (panel) => panel === document.activeElement || panel?.contains(document.activeElement)
       );
 
       if (focusedIndex !== -1) {
@@ -200,39 +201,44 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
           e.key === 'ArrowLeft'
             ? (focusedIndex - 1 + panels.length) % panels.length
             : (focusedIndex + 1) % panels.length;
-        (panels[nextIndex] as HTMLElement)?.focus();
+        panels[nextIndex]?.focus();
         e.preventDefault();
       }
     }
   };
 
+  const effectiveBeforeLabel = beforeLabel || 'Before';
+  const effectiveAfterLabel = afterLabel || 'After';
+
   const containerContent = (
     <>
       <Box
+        ref={beforePanelRef}
         {...getStyles('panel', { className: classes.beforePanel })}
         data-compare-panel="before"
         role="region"
-        aria-label={typeof beforeLabel === 'string' ? beforeLabel : 'Before view'}
+        aria-label={typeof effectiveBeforeLabel === 'string' ? effectiveBeforeLabel : 'Before view'}
         tabIndex={0}
       >
-        {showLabels && beforeLabel && (
+        {showLabels && effectiveBeforeLabel && (
           <Box {...getStyles('label')} data-position="before">
-            {beforeLabel}
+            {effectiveBeforeLabel}
           </Box>
         )}
         {before}
       </Box>
 
       <Box
+        ref={afterPanelRef}
         {...getStyles('panel', { className: classes.afterPanel })}
         data-compare-panel="after"
         role="region"
-        aria-label={typeof afterLabel === 'string' ? afterLabel : 'After view'}
+        aria-label={typeof effectiveAfterLabel === 'string' ? effectiveAfterLabel : 'After view'}
         tabIndex={0}
       >
-        {showLabels && afterLabel && (
+        {showLabels && effectiveAfterLabel && (
           <Box {...getStyles('label')} data-position="after">
-            {afterLabel}
+            {effectiveAfterLabel}
           </Box>
         )}
         {after}

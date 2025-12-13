@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { Box, Paper, Text, Title } from '@mantine/core';
+import { Box, Paper, Text, Title, Button } from '@mantine/core';
 import { Compare } from './Compare';
 
 const meta: Meta<typeof Compare> = {
@@ -153,13 +153,13 @@ export const InteractiveContent: Story = {
     before: (
       <Box p="xl" style={{ width: '100%', height: '100%' }}>
         <Title order={3} mb="md">Interactive Elements</Title>
-        <button type="button" onClick={() => { console.log('Before clicked'); /* eslint-disable-line no-console */ }}>Click Me (Before)</button>
+        <Button size="xs">Click Me (Before)</Button>
       </Box>
     ),
     after: (
       <Box p="xl" style={{ width: '100%', height: '100%' }}>
         <Title order={3} mb="md">Interactive Elements</Title>
-        <button type="button" onClick={() => { console.log('After clicked'); /* eslint-disable-line no-console */ }}>Click Me (After)</button>
+        <Button size="xs">Click Me (After)</Button>
       </Box>
     ),
     minHeight: '300px',
