@@ -141,9 +141,11 @@ export const CompareImage = factory<CompareImageFactory>((_props, ref) => {
 
   const handleTouchEnd = useCallback(() => {
     isDragging.current = false;
-    document.removeEventListener('touchmove', handleTouchMove, {
-      passive: false,
-    } as EventListenerOptions);
+    document.removeEventListener(
+      'touchmove',
+      handleTouchMove as EventListener,
+      { passive: false } as AddEventListenerOptions
+    );
     document.removeEventListener('touchend', handleTouchEnd);
   }, [handleTouchMove]);
 
