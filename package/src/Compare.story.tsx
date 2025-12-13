@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { Box, Paper, Text, Title, Button } from '@mantine/core';
+import type { Meta, StoryObj } from '@storybook/react';
+import { Box, Button, Paper, Text, Title } from '@mantine/core';
 import { Compare } from './Compare';
 
 const meta: Meta<typeof Compare> = {
@@ -114,13 +114,35 @@ export const VerticalOrientation: Story = {
 export const WithAspectRatio: Story = {
   args: {
     before: (
-      <Box bg="pink.2" style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Text size="xl" fw={700}>16:9 Aspect Ratio</Text>
+      <Box
+        bg="pink.2"
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Text size="xl" fw={700}>
+          16:9 Aspect Ratio
+        </Text>
       </Box>
     ),
     after: (
-      <Box bg="cyan.2" style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Text size="xl" fw={700}>16:9 Aspect Ratio</Text>
+      <Box
+        bg="cyan.2"
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Text size="xl" fw={700}>
+          16:9 Aspect Ratio
+        </Text>
       </Box>
     ),
     aspectRatio: '16/9',
@@ -152,13 +174,17 @@ export const InteractiveContent: Story = {
   args: {
     before: (
       <Box p="xl" style={{ width: '100%', height: '100%' }}>
-        <Title order={3} mb="md">Interactive Elements</Title>
+        <Title order={3} mb="md">
+          Interactive Elements
+        </Title>
         <Button size="xs">Click Me (Before)</Button>
       </Box>
     ),
     after: (
       <Box p="xl" style={{ width: '100%', height: '100%' }}>
-        <Title order={3} mb="md">Interactive Elements</Title>
+        <Title order={3} mb="md">
+          Interactive Elements
+        </Title>
         <Button size="xs">Click Me (After)</Button>
       </Box>
     ),

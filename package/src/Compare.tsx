@@ -8,8 +8,8 @@ import {
   getSize,
   getSpacing,
   MantineRadius,
-  MantineSize,
   MantineShadow,
+  MantineSize,
   MantineSpacing,
   StylesApiProps,
   useProps,
@@ -90,10 +90,7 @@ export interface CompareBaseProps {
   showLabels?: boolean;
 }
 
-export interface CompareProps
-  extends BoxProps,
-    CompareBaseProps,
-    StylesApiProps<CompareFactory> {}
+export interface CompareProps extends BoxProps, CompareBaseProps, StylesApiProps<CompareFactory> {}
 
 export type CompareFactory = Factory<{
   props: CompareProps;
@@ -115,10 +112,7 @@ export const defaultProps: Partial<CompareProps> = {
 };
 
 const varsResolver = createVarsResolver<CompareFactory>(
-  (
-    _,
-    { radius, shadow, padding, aspectRatio, minHeight, fit }
-  ) => {
+  (_, { radius, shadow, padding, aspectRatio, minHeight, fit }) => {
     return {
       root: {
         '--compare-radius': radius ? getRadius(radius) : undefined,
@@ -256,11 +250,7 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
       onKeyDown={handleKeyDown}
       {...others}
     >
-      <Box
-        {...getStyles('container')}
-        data-orientation={orientation}
-        data-stack-at={stackAt}
-      >
+      <Box {...getStyles('container')} data-orientation={orientation} data-stack-at={stackAt}>
         {containerContent}
       </Box>
     </Box>

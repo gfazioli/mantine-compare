@@ -4,9 +4,7 @@ import { Compare } from './Compare';
 
 describe('Compare', () => {
   it('renders without crashing', () => {
-    const { container } = render(
-      <Compare before={<div>Before</div>} after={<div>After</div>} />
-    );
+    const { container } = render(<Compare before={<div>Before</div>} after={<div>After</div>} />);
     expect(container).toBeTruthy();
   });
 
@@ -102,11 +100,7 @@ describe('Compare', () => {
 
   it('accepts custom className', () => {
     const { container } = render(
-      <Compare
-        before={<div>Before</div>}
-        after={<div>After</div>}
-        className="custom-class"
-      />
+      <Compare before={<div>Before</div>} after={<div>After</div>} className="custom-class" />
     );
 
     const rootElement = container.querySelector('.custom-class');
