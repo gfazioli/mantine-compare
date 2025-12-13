@@ -126,4 +126,29 @@ describe('Compare', () => {
     expect(screen.getByText('Paragraph')).toBeInTheDocument();
     expect(screen.getByTestId('custom')).toBeInTheDocument();
   });
+
+  it('uses default labels when none provided', () => {
+    render(<Compare before={<div>Before</div>} after={<div>After</div>} showLabels />);
+
+    const beforePanel = screen.getByRole('region', { name: 'Before' });
+    const afterPanel = screen.getByRole('region', { name: 'After' });
+    expect(beforePanel).toBeInTheDocument();
+    expect(afterPanel).toBeInTheDocument();
+  });
+
+  it('supports all Mantine common props', () => {
+    const { container } = render(
+      <Compare
+        before={<div>Before</div>}
+        after={<div>After</div>}
+        radius="lg"
+        shadow="md"
+        padding="xl"
+        withBorder
+      />
+    );
+
+    const rootElement = container.querySelector('[data-with-border]');
+    expect(rootElement).toBeInTheDocument();
+  });
 });
