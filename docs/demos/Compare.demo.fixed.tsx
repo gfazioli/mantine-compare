@@ -1,55 +1,56 @@
-import { Compare, CompareProps } from '@gfazioli/mantine-compare';
+import { Compare } from '@gfazioli/mantine-compare';
 import { Box, Text } from '@mantine/core';
 import { MantineDemo } from '@mantinex/demo';
 
-function Demo(props: CompareProps) {
-  return (
-    <Compare
-      {...props}
-      leftSection={
-        <Box
-          style={{
-            background: 'linear-gradient(45deg, #667eea 0%, #764ba2 100%)',
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Text size="xl" c="white" fw={700}>
-            Before
-          </Text>
-        </Box>
-      }
-      rightSection={
-        <Box
-          style={{
-            background: 'linear-gradient(45deg, #f093fb 0%, #f5576c 100%)',
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Text size="xl" c="white" fw={700}>
-            After
-          </Text>
-        </Box>
-      }
-    />
-  );
-}
-
-const code = `
-import { Compare } from "@gfazioli/mantine-compare";
-import { data } from './data';
+const code = `import { Compare } from '@gfazioli/mantine-compare';
+import { Box, Text } from '@mantine/core';
 
 function Demo() {
-    return (
+  return (
     <Compare
-      {{props}}
+      variant="fixed"
+      defaultPosition={35}
+      leftSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #667eea 0%, #764ba2 100%)',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text size="xl" c="white" fw={700}>
+            Before
+          </Text>
+        </Box>
+      }
+      rightSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #f093fb 0%, #f5576c 100%)',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text size="xl" c="white" fw={700}>
+            After
+          </Text>
+        </Box>
+      }
+    />
+  );
+}`;
+
+function Demo() {
+  return (
+    <Compare
+      variant="fixed"
+      defaultPosition={35}
       leftSection={
         <Box
           style={{
@@ -85,31 +86,10 @@ function Demo() {
     />
   );
 }
-`;
 
-export const configurator: MantineDemo = {
-  type: 'configurator',
+export const fixed: MantineDemo = {
+  type: 'code',
+  code,
   component: Demo,
-  code: [{ fileName: 'Demo.tsx', code, language: 'tsx' }],
-  controls: [
-    {
-      type: 'segmented',
-      prop: 'variant',
-      initialValue: 'drag',
-      libraryValue: 'drag',
-      data: [
-        { value: 'drag', label: 'Drag' },
-        { value: 'hover', label: 'Hover' },
-        { value: 'fixed', label: 'Fixed' },
-      ],
-    },
-    {
-      type: 'segmented',
-      prop: 'direction',
-      initialValue: 'vertical',
-      libraryValue: 'vertical',
-      data: ['vertical', 'horizontal'],
-    },
-    { type: 'string', prop: 'aspectRatio', initialValue: undefined as any, libraryValue: null },
-  ],
+  defaultExpanded: false,
 };

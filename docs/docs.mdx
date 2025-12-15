@@ -35,6 +35,26 @@ Set `direction="horizontal"` to compare by moving the slider up and down.
 
 <Demo data={demos.horizontal} />
 
+## Variants
+
+The `Compare` component supports three interaction variants:
+
+### Drag variant (default)
+
+The default `variant="drag"` allows users to click and drag the slider button to compare content.
+
+### Hover variant
+
+Set `variant="hover"` to reveal content by moving the mouse over the component. The slider button is hidden in this variant.
+
+<Demo data={demos.hover} />
+
+### Fixed variant
+
+Set `variant="fixed"` to display a static comparison at a specific position. The slider button is hidden and users cannot interact with the slider. Use `defaultPosition` to control the split position.
+
+<Demo data={demos.fixed} />
+
 ## Styles API
 
 `Compare` supports [Styles API](https://mantine.dev/styles/styles-api/), you can add styles to any inner element of the component with `classNames` prop. Follow [Styles API](https://mantine.dev/styles/styles-api/) documentation to learn more.

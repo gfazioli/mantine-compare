@@ -81,4 +81,51 @@ describe('Compare', () => {
     expect(left?.style.clipPath).toContain('inset(');
     expect(right?.style.clipPath).toContain('inset(');
   });
+
+  it('supports fixed variant without button', () => {
+    const { container } = render(
+      <Compare
+        variant="fixed"
+        defaultPosition={75}
+        leftSection={<div>Left</div>}
+        rightSection={<div>Right</div>}
+      />
+    );
+
+    const root = container.querySelector('[data-variant]') as HTMLElement | null;
+    expect(root?.getAttribute('data-variant')).toBe('fixed');
+
+    const button = container.querySelector('[class*="sliderButton"]');
+    expect(button).toBeNull();
+
+    const sliderLine = container.querySelector('[class*="sliderLine"]');
+    expect(sliderLine).toBeTruthy();
+  });
+
+  it('supports drag variant with button (default)', () => {
+    const { container } = render(
+      <Compare variant="drag" leftSection={<div>Left</div>} rightSection={<div>Right</div>} />
+    );
+
+    const root = container.querySelector('[data-variant]') as HTMLElement | null;
+    expect(root?.getAttribute('data-variant')).toBe('drag');
+
+    const button = container.querySelector('[class*="sliderButton"]');
+    expect(button).toBeTruthy();
+  });
+
+  it('supports hover variant without button', () => {
+    const { container } = render(
+      <Compare variant="hover" leftSection={<div>Left</div>} rightSection={<div>Right</div>} />
+    );
+
+    const root = container.querySelector('[data-variant]') as HTMLElement | null;
+    expect(root?.getAttribute('data-variant')).toBe('hover');
+
+    const button = container.querySelector('[class*="sliderButton"]');
+    expect(button).toBeNull();
+
+    const sliderLine = container.querySelector('[class*="sliderLine"]');
+    expect(sliderLine).toBeTruthy();
+  });
 });

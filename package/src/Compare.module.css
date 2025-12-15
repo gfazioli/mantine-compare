@@ -7,6 +7,20 @@
   user-select: none;
 }
 
+/* Hover variant cursor */
+.root[data-variant='hover'] {
+  cursor: col-resize;
+}
+
+.root[data-variant='hover'][data-direction='horizontal'] {
+  cursor: row-resize;
+}
+
+/* Fixed variant - no pointer events on slider */
+.root[data-variant='fixed'] .slider {
+  pointer-events: none;
+}
+
 .leftSection,
 .rightSection {
   position: absolute;
