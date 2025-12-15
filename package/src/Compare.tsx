@@ -169,14 +169,18 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
   }, [handleTouchMove]);
 
   const handleMouseDown = useCallback(() => {
-    if (variant === 'fixed') {return;}
+    if (variant === 'fixed') {
+      return;
+    }
     isDragging.current = true;
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   }, [variant, handleMouseMove, handleMouseUp]);
 
   const handleTouchStart = useCallback(() => {
-    if (variant === 'fixed') {return;}
+    if (variant === 'fixed') {
+      return;
+    }
     isDragging.current = true;
     document.addEventListener('touchmove', handleTouchMove, { passive: false });
     document.addEventListener('touchend', handleTouchEnd);
@@ -184,7 +188,9 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
 
   const handleContainerMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      if (variant !== 'hover') {return;}
+      if (variant !== 'hover') {
+        return;
+      }
       updatePosition(e.clientX, e.clientY);
     },
     [variant, updatePosition]
