@@ -1,3 +1,4 @@
+export { angle } from './Compare.demo.angle';
 export { configurator } from './Compare.demo.configurator';
 export { fixed } from './Compare.demo.fixed';
 export { horizontal } from './Compare.demo.horizontal';
