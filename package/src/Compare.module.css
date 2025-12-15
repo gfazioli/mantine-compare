@@ -29,6 +29,17 @@
   justify-content: center;
 }
 
+.root[data-direction='horizontal'] .slider {
+  left: 0;
+  right: 0;
+  top: auto;
+  bottom: auto;
+  width: auto;
+  height: 3px;
+  transform: translateY(-50%);
+  cursor: row-resize;
+}
+
 .sliderLine {
   position: absolute;
   top: 0;
@@ -39,6 +50,15 @@
   pointer-events: none;
 }
 
+.root[data-direction='horizontal'] .sliderLine {
+  top: auto;
+  bottom: auto;
+  left: 0;
+  right: 0;
+  width: auto;
+  height: 1px;
+}
+
 .sliderButton {
   position: absolute;
   top: 50%;
@@ -47,4 +67,9 @@
   z-index: 2;
   transition: none;
   pointer-events: auto;
+}
+
+.root[data-direction='horizontal'] [data-compare-default-icon] {
+  transform: rotate(90deg);
+  transform-origin: center;
 }

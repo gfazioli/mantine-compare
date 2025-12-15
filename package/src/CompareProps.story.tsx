@@ -7,10 +7,12 @@ export default {
   args: {
     aspectRatio: '16/9',
     defaultPosition: 50,
+    direction: 'vertical',
   },
   argTypes: {
     aspectRatio: { control: 'text' },
     defaultPosition: { control: { type: 'number', min: 0, max: 100 } },
+    direction: { control: 'select', options: ['vertical', 'horizontal'] },
   },
 };
 
