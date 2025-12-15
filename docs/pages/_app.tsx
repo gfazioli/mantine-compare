@@ -1,9 +1,11 @@
-import '@gfazioli/mantine-compare/styles.css';
-import '@mantine/code-highlight/styles.css';
 import '@mantine/core/styles.css';
+// Required styles
+import '@mantine/code-highlight/styles.css';
 import '@mantinex/demo/styles.css';
 import '@mantinex/mantine-header/styles.css';
 import '@mantinex/mantine-logo/styles.css';
+// Component styles
+import '@gfazioli/mantine-compare/styles.css';
 
 import { AppProps } from 'next/app';
 import Head from 'next/head';

@@ -53,7 +53,5 @@ export const horizontal: MantineDemo = {
   type: 'code',
   code,
   component: Demo,
-  centered: true,
   defaultExpanded: false,
-  dimmed: true,
 };
