@@ -7,15 +7,6 @@
   user-select: none;
 }
 
-/* Hover variant cursor */
-.root[data-variant='hover'] {
-  cursor: col-resize;
-}
-
-.root[data-variant='hover'][data-direction='horizontal'] {
-  cursor: row-resize;
-}
-
 /* Fixed variant - no pointer events on slider */
 .root[data-variant='fixed'] .slider {
   pointer-events: none;
@@ -32,45 +23,23 @@
 
 .slider {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  transform: translateX(-50%);
-  cursor: col-resize;
+  cursor: move;
   z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.root[data-direction='horizontal'] .slider {
-  left: 0;
-  right: 0;
-  top: auto;
-  bottom: auto;
-  width: auto;
-  height: 3px;
-  transform: translateY(-50%);
-  cursor: row-resize;
-}
-
 .sliderLine {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 1px;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  transform: translateY(-50%);
   background-color: var(--mantine-color-dark-9);
   z-index: 1;
   pointer-events: none;
-}
-
-.root[data-direction='horizontal'] .sliderLine {
-  top: auto;
-  bottom: auto;
-  left: 0;
-  right: 0;
-  width: auto;
-  height: 1px;
 }
 
 .sliderButton {
@@ -81,9 +50,4 @@
   z-index: 2;
   transition: none;
   pointer-events: auto;
-}
-
-.root[data-direction='horizontal'] [data-compare-default-icon] {
-  transform: rotate(90deg);
-  transform-origin: center;
 }

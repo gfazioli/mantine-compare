@@ -105,10 +105,32 @@ export function WithImages() {
   );
 }
 
-export function HorizontalDirection() {
+export function Angle90() {
   return (
     <Compare
-      direction="horizontal"
+      angle={90}
+      leftSection={
+        <Image
+          src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop"
+          alt="Before"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      }
+      rightSection={
+        <Image
+          src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&auto=format&fit=crop"
+          alt="After"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      }
+    />
+  );
+}
+
+export function Angle30() {
+  return (
+    <Compare
+      angle={30}
       leftSection={
         <Image
           src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop"

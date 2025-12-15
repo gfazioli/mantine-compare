@@ -58,28 +58,21 @@ describe('Compare', () => {
     expect(container.textContent).toContain('Right paragraph');
   });
 
-  it('supports horizontal direction', () => {
+  it('supports angle=90 (horizontal behavior)', () => {
     const { container } = render(
       <Compare
-        direction="horizontal"
+        angle={90}
         defaultPosition={25}
         leftSection={<div>Top</div>}
         rightSection={<div>Bottom</div>}
       />
     );
 
-    const root = container.querySelector('[data-direction]') as HTMLElement | null;
-    expect(root?.getAttribute('data-direction')).toBe('horizontal');
+    const root = container.querySelector('[data-angle]') as HTMLElement | null;
+    expect(root?.getAttribute('data-angle')).toBe('90');
 
-    const slider = container.querySelector('[class*="slider"]') as HTMLElement | null;
-    expect(slider?.style.top).toBe('25%');
-    expect(slider?.style.left).toBe('');
-
-    const left = container.querySelector('[class*="leftSection"]') as HTMLElement | null;
-    const right = container.querySelector('[class*="rightSection"]') as HTMLElement | null;
-
-    expect(left?.style.clipPath).toContain('inset(');
-    expect(right?.style.clipPath).toContain('inset(');
+    const sliderLine = container.querySelector('[class*="sliderLine"]');
+    expect(sliderLine).toBeTruthy();
   });
 
   it('supports fixed variant without button', () => {

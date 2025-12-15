@@ -29,9 +29,13 @@ You can use the `Compare` component to compare two images by passing `Image` com
 
 <Demo data={demos.withImage} />
 
-## Horizontal direction
+## Angle
 
-Set `direction="horizontal"` to compare by moving the slider up and down.
+Use `angle` to control the divider orientation.
+
+- `angle={0}` behaves like the previous vertical direction (left/right compare)
+- `angle={90}` behaves like the previous horizontal direction (top/bottom compare)
+- Any value between `0` and `360` creates an oblique (diagonal) divider
 
 <Demo data={demos.horizontal} />
 
