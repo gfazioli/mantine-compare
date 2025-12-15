@@ -43,9 +43,72 @@ export function Usage() {
   );
 }
 
+export function WithWidth() {
+  return (
+    <Compare
+      w={300}
+      bdrs={16}
+      leftSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #667eea 0%, #764ba2 100%)',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text size="xl" c="white" fw={700}>
+            Before
+          </Text>
+        </Box>
+      }
+      rightSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #f093fb 0%, #f5576c 100%)',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text size="xl" c="white" fw={700}>
+            After
+          </Text>
+        </Box>
+      }
+    />
+  );
+}
+
 export function WithImages() {
   return (
     <Compare
+      leftSection={
+        <Image
+          src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop"
+          alt="Before"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      }
+      rightSection={
+        <Image
+          src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&auto=format&fit=crop"
+          alt="After"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      }
+    />
+  );
+}
+
+export function HorizontalDirection() {
+  return (
+    <Compare
+      direction="horizontal"
       leftSection={
         <Image
           src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop"

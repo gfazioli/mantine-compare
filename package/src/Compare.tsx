@@ -35,6 +35,9 @@ export interface CompareProps extends BoxProps, StylesApiProps<CompareFactory> {
   /** Aspect ratio of the container @default '16/9' */
   aspectRatio?: string;
 
+  /** Direction of the slider movement and clipping @default 'vertical' */
+  direction?: 'vertical' | 'horizontal';
+
   /** Initial position of the slider (0-100) @default 50 */
   defaultPosition?: number;
 
@@ -55,7 +58,7 @@ export type CompareFactory = Factory<{
 const defaultProps: Partial<CompareProps> = {
   aspectRatio: '16/9',
   defaultPosition: 50,
-  sliderIcon: <IconArrowsLeftRight size={16} />,
+  direction: 'vertical',
 };
 
 const varsResolver = createVarsResolver<CompareFactory>((_, { aspectRatio }) => ({
@@ -71,6 +74,7 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
     leftSection,
     rightSection,
     aspectRatio,
+    direction,
     defaultPosition,
     onPositionChange,
     sliderIcon,
@@ -82,6 +86,10 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
     className,
     ...others
   } = props;
+
+  const resolvedSliderIcon = sliderIcon ?? (
+    <IconArrowsLeftRight size={16} data-compare-default-icon />
+  );
 
   const getStyles = useStyles<CompareFactory>({
     name: 'Compare',
@@ -101,25 +109,27 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
   const isDragging = useRef(false);
 
   const updatePosition = useCallback(
-    (clientX: number) => {
+    (clientX: number, clientY: number) => {
       if (!containerRef.current) {
         return;
       }
 
       const rect = containerRef.current.getBoundingClientRect();
-      const x = clientX - rect.left;
-      const containerWidth = rect.width;
 
-      const newPosition = Math.max(0, Math.min(100, (x / containerWidth) * 100));
+      const newPosition =
+        direction === 'horizontal'
+          ? Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100))
+          : Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+
       setPosition(newPosition);
       onPositionChange?.(newPosition);
     },
-    [onPositionChange]
+    [direction, onPositionChange]
   );
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      updatePosition(e.clientX);
+      updatePosition(e.clientX, e.clientY);
     },
     [updatePosition]
   );
@@ -127,7 +137,7 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
   const handleTouchMove = useCallback(
     (e: TouchEvent) => {
       if (e.touches.length > 0) {
-        updatePosition(e.touches[0].clientX);
+        updatePosition(e.touches[0].clientX, e.touches[0].clientY);
       }
     },
     [updatePosition]
@@ -171,13 +181,17 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
           ref.current = node;
         }
       }}
+      data-direction={direction}
       {...getStyles('root')}
       {...others}
     >
       <Box
         {...getStyles('leftSection', {
           style: {
-            clipPath: `inset(0 ${100 - position}% 0 0)`,
+            clipPath:
+              direction === 'horizontal'
+                ? `inset(0 0 ${100 - position}% 0)`
+                : `inset(0 ${100 - position}% 0 0)`,
           },
         })}
       >
@@ -187,7 +201,10 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
       <Box
         {...getStyles('rightSection', {
           style: {
-            clipPath: `inset(0 0 0 ${position}%)`,
+            clipPath:
+              direction === 'horizontal'
+                ? `inset(${position}% 0 0 0)`
+                : `inset(0 0 0 ${position}%)`,
           },
         })}
       >
@@ -197,7 +214,7 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
       <Box
         {...getStyles('slider', {
           style: {
-            left: `${position}%`,
+            ...(direction === 'horizontal' ? { top: `${position}%` } : { left: `${position}%` }),
           },
         })}
         onMouseDown={handleMouseDown}
@@ -206,7 +223,7 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
         <Box {...getStyles('sliderLine')} />
         <Box {...getStyles('sliderButton')}>
           <ActionIcon variant="filled" color="dark.9" radius="xl" size="lg">
-            {sliderIcon}
+            {resolvedSliderIcon}
           </ActionIcon>
         </Box>
       </Box>
