@@ -1,12 +1,12 @@
 import React from 'react';
 import { Box, Image, Text } from '@mantine/core';
-import { CompareImage } from './CompareImage';
+import { Compare } from './Compare';
 
-export default { title: 'CompareImage' };
+export default { title: 'Compare' };
 
 export function Usage() {
   return (
-    <CompareImage
+    <Compare
       leftSection={
         <Box
           style={{
@@ -45,7 +45,7 @@ export function Usage() {
 
 export function WithImages() {
   return (
-    <CompareImage
+    <Compare
       leftSection={
         <Image
           src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop"
@@ -66,7 +66,7 @@ export function WithImages() {
 
 export function CustomAspectRatio() {
   return (
-    <CompareImage
+    <Compare
       aspectRatio="4/3"
       leftSection={
         <Box
@@ -106,7 +106,7 @@ export function CustomAspectRatio() {
 
 export function WithCustomPosition() {
   return (
-    <CompareImage
+    <Compare
       defaultPosition={75}
       leftSection={
         <Box
@@ -150,7 +150,7 @@ export function WithCallback() {
   return (
     <div>
       <Text mb="md">Current position: {position.toFixed(2)}%</Text>
-      <CompareImage
+      <Compare
         onPositionChange={setPosition}
         leftSection={
           <Box

@@ -1,5 +1,5 @@
-import { JsonTreeStylesApi } from './JsonTree.styles-api';
+import { CompareStylesApi } from './Compare.styles-api';
 
 export const STYLES_API_DATA = {
-  JsonTree: JsonTreeStylesApi,
+  Compare: CompareStylesApi,
 };

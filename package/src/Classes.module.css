@@ -29,6 +29,6 @@
 }
 
 .indentGuide {
-  --json-tree-indent-guide-color-0: rgb(255, 0, 0);
-  --json-tree-indent-guide-color-1: rgb(0, 255, 102);
+  --compare-indent-guide-color-0: rgb(255, 0, 0);
+  --compare-indent-guide-color-1: rgb(0, 255, 102);
 }

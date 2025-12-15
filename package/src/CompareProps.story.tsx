@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, Text } from '@mantine/core';
-import { CompareImage, CompareImageProps } from './CompareImage';
+import { Compare, CompareProps } from './Compare';
 
 export default {
-  title: 'CompareImage Props',
+  title: 'Compare Props',
   args: {
     aspectRatio: '16/9',
     defaultPosition: 50,
@@ -14,7 +14,7 @@ export default {
   },
 };
 
-export function UsageProps(props: CompareImageProps) {
+export function UsageProps(props: CompareProps) {
   const leftSection = (
     <Box
       style={{
@@ -49,5 +49,5 @@ export function UsageProps(props: CompareImageProps) {
     </Box>
   );
 
-  return <CompareImage leftSection={leftSection} rightSection={rightSection} {...props} />;
+  return <Compare leftSection={leftSection} rightSection={rightSection} {...props} />;
 }
