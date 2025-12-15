@@ -11,9 +11,9 @@ import {
   useStyles,
   type BoxProps,
 } from '@mantine/core';
-import classes from './CompareImage.module.css';
+import classes from './Compare.module.css';
 
-export type CompareImageStylesNames =
+export type CompareStylesNames =
   | 'root'
   | 'leftSection'
   | 'rightSection'
@@ -21,11 +21,11 @@ export type CompareImageStylesNames =
   | 'sliderLine'
   | 'sliderButton';
 
-export type CompareImageCssVariables = {
-  root: '--compare-image-aspect-ratio';
+export type CompareCssVariables = {
+  root: '--compare-aspect-ratio';
 };
 
-export interface CompareImageProps extends BoxProps, StylesApiProps<CompareImageFactory> {
+export interface CompareProps extends BoxProps, StylesApiProps<CompareFactory> {
   /** Content to display on the left side */
   leftSection: React.ReactNode;
 
@@ -45,27 +45,27 @@ export interface CompareImageProps extends BoxProps, StylesApiProps<CompareImage
   sliderIcon?: React.ReactNode;
 }
 
-export type CompareImageFactory = Factory<{
-  props: CompareImageProps;
+export type CompareFactory = Factory<{
+  props: CompareProps;
   ref: HTMLDivElement;
-  stylesNames: CompareImageStylesNames;
-  vars: CompareImageCssVariables;
+  stylesNames: CompareStylesNames;
+  vars: CompareCssVariables;
 }>;
 
-const defaultProps: Partial<CompareImageProps> = {
+const defaultProps: Partial<CompareProps> = {
   aspectRatio: '16/9',
   defaultPosition: 50,
   sliderIcon: <IconArrowsLeftRight size={16} />,
 };
 
-const varsResolver = createVarsResolver<CompareImageFactory>((_, { aspectRatio }) => ({
+const varsResolver = createVarsResolver<CompareFactory>((_, { aspectRatio }) => ({
   root: {
-    '--compare-image-aspect-ratio': aspectRatio || '16/9',
+    '--compare-aspect-ratio': aspectRatio || '16/9',
   },
 }));
 
-export const CompareImage = factory<CompareImageFactory>((_props, ref) => {
-  const props = useProps('CompareImage', defaultProps, _props);
+export const Compare = factory<CompareFactory>((_props, ref) => {
+  const props = useProps('Compare', defaultProps, _props);
 
   const {
     leftSection,
@@ -83,8 +83,8 @@ export const CompareImage = factory<CompareImageFactory>((_props, ref) => {
     ...others
   } = props;
 
-  const getStyles = useStyles<CompareImageFactory>({
-    name: 'CompareImage',
+  const getStyles = useStyles<CompareFactory>({
+    name: 'Compare',
     props,
     classes,
     className,
@@ -175,34 +175,37 @@ export const CompareImage = factory<CompareImageFactory>((_props, ref) => {
       {...others}
     >
       <Box
-        {...getStyles('leftSection')}
-        style={{
-          clipPath: `inset(0 ${100 - position}% 0 0)`,
-        }}
+        {...getStyles('leftSection', {
+          style: {
+            clipPath: `inset(0 ${100 - position}% 0 0)`,
+          },
+        })}
       >
         {leftSection}
       </Box>
 
       <Box
-        {...getStyles('rightSection')}
-        style={{
-          clipPath: `inset(0 0 0 ${position}%)`,
-        }}
+        {...getStyles('rightSection', {
+          style: {
+            clipPath: `inset(0 0 0 ${position}%)`,
+          },
+        })}
       >
         {rightSection}
       </Box>
 
       <Box
-        {...getStyles('slider')}
-        style={{
-          left: `${position}%`,
-        }}
+        {...getStyles('slider', {
+          style: {
+            left: `${position}%`,
+          },
+        })}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
       >
         <Box {...getStyles('sliderLine')} />
         <Box {...getStyles('sliderButton')}>
-          <ActionIcon variant="filled" color="gray" radius="xl" size="lg">
+          <ActionIcon variant="filled" color="dark.9" radius="xl" size="lg">
             {sliderIcon}
           </ActionIcon>
         </Box>
@@ -211,5 +214,5 @@ export const CompareImage = factory<CompareImageFactory>((_props, ref) => {
   );
 });
 
-CompareImage.classes = classes;
-CompareImage.displayName = 'CompareImage';
+Compare.classes = classes;
+Compare.displayName = 'Compare';

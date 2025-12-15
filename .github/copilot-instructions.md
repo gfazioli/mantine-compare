@@ -1,8 +1,8 @@
-# Copilot Instructions for Mantine JsonTree Component
+# Copilot Instructions for Mantine Compare Component
 
 ## Project Overview
 
-This repository contains a Mantine-based JSON tree viewer component (`@gfazioli/mantine-json-tree`). It's an interactive JSON tree viewer built with Mantine's Tree component, featuring collapsible nodes, syntax highlighting with type-specific colors, copy-to-clipboard functionality, item count badges, configurable expansion depth, and smooth animations.
+This repository contains a Mantine-based JSON tree viewer component (`@gfazioli/mantine-compare`). It's an interactive JSON tree viewer built with Mantine's Tree component, featuring collapsible nodes, syntax highlighting with type-specific colors, copy-to-clipboard functionality, item count badges, configurable expansion depth, and smooth animations.
 
 ## Project Purpose
 
@@ -29,9 +29,9 @@ The component is designed for:
 
 - `package/`: Main package source code
   - `src/`: Component source files
-    - `JsonTree.tsx`: Main component
-    - `JsonTree.module.css`: Component styles
-    - `JsonTree.test.tsx`: Component tests
+    - `Compare.tsx`: Main component
+    - `Compare.module.css`: Component styles
+    - `Compare.test.tsx`: Component tests
     - `lib/`: Utility functions and helpers
 - `docs/`: Documentation site
 - `scripts/`: Build and release scripts
@@ -115,7 +115,7 @@ npm run syncpack            # Check dependency version mismatches
 
 ## Key Files and Their Purpose
 
-- `package/src/JsonTree.tsx`: Main component implementation
+- `package/src/Compare.tsx`: Main component implementation
 - `package/src/lib/`: Helper functions and utilities
 - `package/package.json`: Package metadata and dependencies
 - `rollup.config.mjs`: Build configuration
@@ -191,9 +191,9 @@ The repository uses GitHub Actions for CI:
 
 ## Documentation
 
-- Demo and documentation: https://gfazioli.github.io/mantine-json-tree/
-- NPM package: https://www.npmjs.com/package/@gfazioli/mantine-json-tree
-- Issues: https://github.com/gfazioli/mantine-json-tree/issues
+- Demo and documentation: https://gfazioli.github.io/mantine-compare/
+- NPM package: https://www.npmjs.com/package/@gfazioli/mantine-compare
+- Issues: https://github.com/gfazioli/mantine-compare/issues
 
 ## Support and Community
 

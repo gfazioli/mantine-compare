@@ -1,18 +1,18 @@
 import React from 'react';
 import { render } from '@mantine-tests/core';
-import { CompareImage } from './CompareImage';
+import { Compare } from './Compare';
 
-describe('CompareImage', () => {
+describe('Compare', () => {
   it('renders without crashing', () => {
     const { container } = render(
-      <CompareImage leftSection={<div>Left Content</div>} rightSection={<div>Right Content</div>} />
+      <Compare leftSection={<div>Left Content</div>} rightSection={<div>Right Content</div>} />
     );
     expect(container).toBeTruthy();
   });
 
   it('renders left and right sections', () => {
     const { container } = render(
-      <CompareImage
+      <Compare
         leftSection={<div data-testid="left">Left Content</div>}
         rightSection={<div data-testid="right">Right Content</div>}
       />
@@ -23,11 +23,7 @@ describe('CompareImage', () => {
 
   it('applies default position', () => {
     const { container } = render(
-      <CompareImage
-        leftSection={<div>Left</div>}
-        rightSection={<div>Right</div>}
-        defaultPosition={50}
-      />
+      <Compare leftSection={<div>Left</div>} rightSection={<div>Right</div>} defaultPosition={50} />
     );
     const slider = container.querySelector('[class*="slider"]');
     expect(slider).toBeTruthy();
@@ -35,11 +31,7 @@ describe('CompareImage', () => {
 
   it('accepts custom aspect ratio', () => {
     const { container } = render(
-      <CompareImage
-        leftSection={<div>Left</div>}
-        rightSection={<div>Right</div>}
-        aspectRatio="4/3"
-      />
+      <Compare leftSection={<div>Left</div>} rightSection={<div>Right</div>} aspectRatio="4/3" />
     );
     expect(container.firstChild).toBeTruthy();
   });
@@ -58,9 +50,7 @@ describe('CompareImage', () => {
       </div>
     );
 
-    const { container } = render(
-      <CompareImage leftSection={leftContent} rightSection={rightContent} />
-    );
+    const { container } = render(<Compare leftSection={leftContent} rightSection={rightContent} />);
 
     expect(container.textContent).toContain('Left Title');
     expect(container.textContent).toContain('Right Title');
