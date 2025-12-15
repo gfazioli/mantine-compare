@@ -13,6 +13,9 @@ import {
 } from '@mantine/core';
 import classes from './Compare.module.css';
 
+/** Available compare variants */
+export type CompareVariant = 'fixed' | 'drag' | 'hover';
+
 export type CompareStylesNames =
   | 'root'
   | 'leftSection'
@@ -26,6 +29,9 @@ export type CompareCssVariables = {
 };
 
 export interface CompareProps extends BoxProps, StylesApiProps<CompareFactory> {
+  /** Compare component variant @default 'drag' */
+  variant?: CompareVariant;
+
   /** Content to display on the left side */
   leftSection: React.ReactNode;
 
@@ -52,10 +58,12 @@ export type CompareFactory = Factory<{
   props: CompareProps;
   ref: HTMLDivElement;
   stylesNames: CompareStylesNames;
+  variant: CompareVariant;
   vars: CompareCssVariables;
 }>;
 
 const defaultProps: Partial<CompareProps> = {
+  variant: 'drag',
   aspectRatio: '16/9',
   defaultPosition: 50,
   direction: 'vertical',
@@ -71,6 +79,7 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
   const props = useProps('Compare', defaultProps, _props);
 
   const {
+    variant,
     leftSection,
     rightSection,
     aspectRatio,
@@ -160,16 +169,26 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
   }, [handleTouchMove]);
 
   const handleMouseDown = useCallback(() => {
+    if (variant === 'fixed') return;
     isDragging.current = true;
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
-  }, [handleMouseMove, handleMouseUp]);
+  }, [variant, handleMouseMove, handleMouseUp]);
 
   const handleTouchStart = useCallback(() => {
+    if (variant === 'fixed') return;
     isDragging.current = true;
     document.addEventListener('touchmove', handleTouchMove, { passive: false });
     document.addEventListener('touchend', handleTouchEnd);
-  }, [handleTouchMove, handleTouchEnd]);
+  }, [variant, handleTouchMove, handleTouchEnd]);
+
+  const handleContainerMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (variant !== 'hover') return;
+      updatePosition(e.clientX, e.clientY);
+    },
+    [variant, updatePosition]
+  );
 
   return (
     <Box
@@ -182,6 +201,8 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
         }
       }}
       data-direction={direction}
+      data-variant={variant}
+      onMouseMove={handleContainerMouseMove}
       {...getStyles('root')}
       {...others}
     >
@@ -221,11 +242,13 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
         onTouchStart={handleTouchStart}
       >
         <Box {...getStyles('sliderLine')} />
-        <Box {...getStyles('sliderButton')}>
-          <ActionIcon variant="filled" color="dark.9" radius="xl" size="lg">
-            {resolvedSliderIcon}
-          </ActionIcon>
-        </Box>
+        {variant === 'drag' && (
+          <Box {...getStyles('sliderButton')}>
+            <ActionIcon variant="filled" color="dark.9" radius="xl" size="lg">
+              {resolvedSliderIcon}
+            </ActionIcon>
+          </Box>
+        )}
       </Box>
     </Box>
   );
