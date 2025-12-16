@@ -127,14 +127,6 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
 
   const normalizedAngle = normalizeAngle(angle);
 
-  const resolvedSliderIcon = sliderIcon ?? (
-    <IconArrowsLeftRight
-      size={16}
-      data-compare-default-icon
-      style={{ transform: `rotate(${normalizedAngle}deg)`, transformOrigin: 'center' }}
-    />
-  );
-
   const getStyles = useStyles<CompareFactory>({
     name: 'Compare',
     props,
@@ -165,15 +157,17 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
     const normal = getNormalFromAngle(normalizedAngle);
 
     if (width <= 0 || height <= 0) {
+      const lineAngle = normalizedAngle + 90;
       return {
         leftClipPath: undefined as string | undefined,
         rightClipPath: undefined as string | undefined,
+        lineAngle,
         sliderStyle: {
           left: '50%',
           top: '50%',
           width: '100%',
           height: '48px',
-          transform: `translate(-50%, -50%) rotate(${normalizedAngle + 90}deg)`,
+          transform: `translate(-50%, -50%) rotate(${lineAngle}deg)`,
         } as React.CSSProperties,
       };
     }
@@ -189,15 +183,17 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
 
     const segment = getLineSegmentInRect(width, height, normal, p);
     if (!segment) {
+      const lineAngle = normalizedAngle + 90;
       return {
         leftClipPath,
         rightClipPath,
+        lineAngle,
         sliderStyle: {
           left: '50%',
           top: '50%',
           width: '100%',
           height: '48px',
-          transform: `translate(-50%, -50%) rotate(${normalizedAngle + 90}deg)`,
+          transform: `translate(-50%, -50%) rotate(${lineAngle}deg)`,
         } as React.CSSProperties,
       };
     }
@@ -212,6 +208,7 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
     return {
       leftClipPath,
       rightClipPath,
+      lineAngle,
       sliderStyle: {
         left: `${mid.x}px`,
         top: `${mid.y}px`,
@@ -221,6 +218,14 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
       } as React.CSSProperties,
     };
   }, [containerWidth, containerHeight, normalizedAngle, position]);
+
+  const sliderIconRotation = normalizedAngle - geometry.lineAngle;
+
+  const resolvedSliderIcon = (
+    <Box style={{ transform: `rotate(${sliderIconRotation}deg)`, transformOrigin: 'center' }}>
+      {sliderIcon ?? <IconArrowsLeftRight size={16} data-compare-default-icon />}
+    </Box>
+  );
 
   const updatePosition = useCallback(
     (clientX: number, clientY: number) => {
