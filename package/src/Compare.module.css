@@ -5,6 +5,7 @@
   overflow: hidden;
   touch-action: none;
   user-select: none;
+  border-radius: calc(var(--compare-radius));
 }
 
 /* Fixed variant - no pointer events on slider */
