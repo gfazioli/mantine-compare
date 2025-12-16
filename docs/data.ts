@@ -27,7 +27,7 @@ export interface PackageData {
 export const PACKAGE_DATA: PackageData = {
   packageName: '@gfazioli/mantine-compare',
   packageDescription:
-    'A Mantine extension component that renders interactive JSON trees with syntax highlighting, collapsible nodes, copy-to-clipboard, and configurable expansion depth.',
+    'Mantine Compare is a responsive side‑by‑side comparison container that lets you render two pieces of content (images or custom React nodes) with consistent styling, layout controls, and accessibility.',
   mdxFileUrl: 'https://github.com/gfazioli/mantine-compare/blob/master/docs/docs.mdx',
   repositoryUrl: 'https://github.com/gfazioli/mantine-compare',
   licenseUrl: 'https://github.com/gfazioli/mantine-compare/blob/master/LICENSE',

@@ -18,7 +18,7 @@ function Demo(props: CompareProps) {
           }}
         >
           <Text size="xl" c="white" fw={700}>
-            Before
+            Before (leftSection)
           </Text>
         </Box>
       }
@@ -34,7 +34,7 @@ function Demo(props: CompareProps) {
           }}
         >
           <Text size="xl" c="white" fw={700}>
-            After
+            After (rightSection)
           </Text>
         </Box>
       }
