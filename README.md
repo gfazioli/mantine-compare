@@ -19,7 +19,7 @@ This component is created on top of the [Mantine](https://mantine.dev/) library.
 [![Mantine UI Library](https://img.shields.io/badge/-MANTINE_UI_LIBRARY-blue?style=for-the-badge&labelColor=black&logo=mantine
 )](https://mantine.dev/)
 
-An interactive JSON tree viewer component built with Mantine's Tree component. Features collapsible nodes, syntax highlighting with type-specific colors, copy-to-clipboard functionality, item count badges, configurable expansion depth, and smooth animations. Perfect for debugging API responses, exploring complex data structures, and developer tools.
+Mantine Compare provides a clean, flexible frame for showcasing before/after states, light vs dark themes, or alternative designs. Each side accepts either a simple image (src with optional alt) or any ReactNode, enabling custom content like captions, overlays, or interactive elements. The component exposes common Mantine props for radius, shadow, withBorder, and padding, plus layout controls such as fixed aspect ratio, fit modes, and responsive stacking. Built on Mantine’s theming system, it integrates seamlessly with your design tokens and supports keyboard navigation and ARIA labeling for accessible comparisons.
 
 [![Mantine Extensions](https://img.shields.io/badge/-Watch_the_Video-blue?style=for-the-badge&labelColor=black&logo=youtube
 )](https://www.youtube.com/playlist?list=PL85tTROKkZrWyqCcmNCdWajpx05-cTal4)
