@@ -19,7 +19,7 @@ This component is created on top of the [Mantine](https://mantine.dev/) library.
 [![Mantine UI Library](https://img.shields.io/badge/-MANTINE_UI_LIBRARY-blue?style=for-the-badge&labelColor=black&logo=mantine
 )](https://mantine.dev/)
 
-Mantine Compare provides a clean, flexible frame for showcasing before/after states, light vs dark themes, or alternative designs. Each side accepts either a simple image (src with optional alt) or any ReactNode, enabling custom content like captions, overlays, or interactive elements. The component exposes common Mantine props for radius, shadow, withBorder, and padding, plus layout controls such as fixed aspect ratio, fit modes, and responsive stacking. Built on Mantine’s theming system, it integrates seamlessly with your design tokens and supports keyboard navigation and ARIA labeling for accessible comparisons.
+Mantine Compare provides an interactive before/after viewer for any React nodes or images, with a slider you can drag, reveal on hover, or lock to a position. Configure the divider angle (0° for left/right, 90° for top/bottom, any value for diagonal) and control the initial split via defaultPosition. Built for Mantine, it includes a Styles API for fine‑grained styling and consistent layout and accessibility.
 
 [![Mantine Extensions](https://img.shields.io/badge/-Watch_the_Video-blue?style=for-the-badge&labelColor=black&logo=youtube
 )](https://www.youtube.com/playlist?list=PL85tTROKkZrWyqCcmNCdWajpx05-cTal4)
