@@ -7,8 +7,8 @@
   "license": "MIT",
   "author": "Giovambattista Fazioli <giovambattista.fazioli@gmail.com>",
   "keywords": [
-    "extension",
     "compare",
+    "extension",
     "json-view",
     "mantine",
     "react",
