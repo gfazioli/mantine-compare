@@ -6,10 +6,12 @@ import {
   createVarsResolver,
   Factory,
   factory,
+  getRadius,
   StylesApiProps,
   useProps,
   useStyles,
   type BoxProps,
+  type MantineRadius,
 } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
 import {
@@ -53,6 +55,11 @@ export interface CompareProps extends BoxProps, StylesApiProps<CompareFactory> {
   /** Aspect ratio of the container @default '16/9' */
   aspectRatio?: string;
 
+  /** Border radius
+   * @default 'md'
+   */
+  radius?: MantineRadius | (string & {}) | number;
+
   /**
    * Angle of the divider in degrees (0-360).
    *
@@ -86,11 +93,13 @@ const defaultProps: Partial<CompareProps> = {
   aspectRatio: '16/9',
   defaultPosition: 50,
   angle: 0,
+  radius: 'md',
 };
 
-const varsResolver = createVarsResolver<CompareFactory>((_, { aspectRatio }) => ({
+const varsResolver = createVarsResolver<CompareFactory>((_, { aspectRatio, radius }) => ({
   root: {
     '--compare-aspect-ratio': aspectRatio || '16/9',
+    '--compare-radius': radius === undefined ? undefined : getRadius(radius),
   },
 }));
 
@@ -103,6 +112,7 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
     rightSection,
     aspectRatio,
     angle,
+    radius,
     defaultPosition,
     onPositionChange,
     sliderIcon,

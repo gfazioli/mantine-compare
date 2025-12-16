@@ -48,8 +48,7 @@ import { data } from './data';
 
 function Demo() {
     return (
-    <Compare
-      {{props}}
+    <Compare{{props}}
       leftSection={
         <Box
           style={{
@@ -103,6 +102,7 @@ export const configurator: MantineDemo = {
         { value: 'fixed', label: 'Fixed' },
       ],
     },
+    { type: 'size', prop: 'radius', initialValue: 'md', libraryValue: 'md' },
     {
       type: 'number',
       prop: 'angle',

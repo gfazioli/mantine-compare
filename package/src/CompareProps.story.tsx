@@ -8,11 +8,13 @@ export default {
     aspectRatio: '16/9',
     defaultPosition: 50,
     angle: 0,
+    radius: 'md',
   },
   argTypes: {
     aspectRatio: { control: 'text' },
     defaultPosition: { control: { type: 'number', min: 0, max: 100 } },
     angle: { control: { type: 'number', min: 0, max: 360, step: 1 } },
+    radius: { control: { type: 'number', min: 0, max: 256, step: 1 } },
   },
 };
 
