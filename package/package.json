@@ -1,6 +1,6 @@
 {
   "name": "@gfazioli/mantine-compare",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "Mantine Compare is a responsive side‑by‑side comparison container that lets you render two pieces of content (images or custom React nodes) with consistent styling, layout controls, and accessibility.",
   "homepage": "https://gfazioli.github.io/mantine-compare/",
   "packageManager": "yarn@4.0.1",
