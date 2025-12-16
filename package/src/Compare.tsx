@@ -12,6 +12,17 @@ import {
   type BoxProps,
 } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
+import {
+  clampNumber,
+  clipPolygonHalfPlane,
+  getLineSegmentInRect,
+  getNormalFromAngle,
+  normalizeAngle,
+  projectCornersRange,
+  projectPoint,
+  toClipPathPolygon,
+  type Point,
+} from './lib/compare-geometry';
 import classes from './Compare.module.css';
 
 /** Available compare variants */
@@ -77,177 +88,6 @@ const defaultProps: Partial<CompareProps> = {
   angle: 0,
 };
 
-type Point = { x: number; y: number };
-
-function clampNumber(value: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, value));
-}
-
-function normalizeAngle(angle: number | undefined) {
-  const raw = typeof angle === 'number' && Number.isFinite(angle) ? angle : 0;
-  return ((raw % 360) + 360) % 360;
-}
-
-function dot(n: Point, p: Point) {
-  return n.x * p.x + n.y * p.y;
-}
-
-function getRectCorners(width: number, height: number): Point[] {
-  return [
-    { x: 0, y: 0 },
-    { x: width, y: 0 },
-    { x: width, y: height },
-    { x: 0, y: height },
-  ];
-}
-
-function intersectSegmentWithLine(s: Point, e: Point, n: Point, p: number): Point | null {
-  const ds = dot(n, s);
-  const de = dot(n, e);
-  const denom = de - ds;
-
-  if (Math.abs(denom) < 1e-9) {
-    return null;
-  }
-
-  const t = (p - ds) / denom;
-  if (t < 0 || t > 1) {
-    return null;
-  }
-
-  return { x: s.x + (e.x - s.x) * t, y: s.y + (e.y - s.y) * t };
-}
-
-function clipPolygonHalfPlane(points: Point[], n: Point, p: number, keepLessEqual: boolean) {
-  if (points.length === 0) {
-    return [] as Point[];
-  }
-
-  const inside = (pt: Point) => {
-    const v = dot(n, pt);
-    return keepLessEqual ? v <= p + 1e-9 : v >= p - 1e-9;
-  };
-
-  const output: Point[] = [];
-  for (let i = 0; i < points.length; i += 1) {
-    const current = points[i];
-    const next = points[(i + 1) % points.length];
-    const currentInside = inside(current);
-    const nextInside = inside(next);
-
-    if (currentInside && nextInside) {
-      output.push(next);
-    } else if (currentInside && !nextInside) {
-      const intersection = intersectSegmentWithLine(current, next, n, p);
-      if (intersection) {
-        output.push(intersection);
-      }
-    } else if (!currentInside && nextInside) {
-      const intersection = intersectSegmentWithLine(current, next, n, p);
-      if (intersection) {
-        output.push(intersection);
-      }
-      output.push(next);
-    }
-  }
-
-  return output;
-}
-
-function toClipPathPolygon(points: Point[], width: number, height: number) {
-  if (width <= 0 || height <= 0 || points.length === 0) {
-    return 'polygon(0 0, 0 0, 0 0)';
-  }
-
-  const formatted = points
-    .map((pt) => {
-      const x = clampNumber((pt.x / width) * 100, 0, 100);
-      const y = clampNumber((pt.y / height) * 100, 0, 100);
-      return `${x.toFixed(4)}% ${y.toFixed(4)}%`;
-    })
-    .join(', ');
-
-  return `polygon(${formatted})`;
-}
-
-function getLineSegmentInRect(
-  width: number,
-  height: number,
-  n: Point,
-  p: number
-): [Point, Point] | null {
-  if (width <= 0 || height <= 0) {
-    return null;
-  }
-
-  const corners = getRectCorners(width, height);
-  const edges: Array<[Point, Point]> = [
-    [corners[0], corners[1]],
-    [corners[1], corners[2]],
-    [corners[2], corners[3]],
-    [corners[3], corners[0]],
-  ];
-
-  const intersections: Point[] = [];
-  for (const [s, e] of edges) {
-    const ds = dot(n, s) - p;
-    const de = dot(n, e) - p;
-
-    if (Math.abs(ds) < 1e-9 && Math.abs(de) < 1e-9) {
-      intersections.push(s, e);
-      continue;
-    }
-
-    if (Math.abs(ds) < 1e-9) {
-      intersections.push(s);
-      continue;
-    }
-
-    if (Math.abs(de) < 1e-9) {
-      intersections.push(e);
-      continue;
-    }
-
-    if ((ds < 0 && de > 0) || (ds > 0 && de < 0)) {
-      const intersection = intersectSegmentWithLine(s, e, n, p);
-      if (intersection) {
-        intersections.push(intersection);
-      }
-    }
-  }
-
-  const unique: Point[] = [];
-  for (const pt of intersections) {
-    const exists = unique.some((u) => Math.abs(u.x - pt.x) < 0.5 && Math.abs(u.y - pt.y) < 0.5);
-    if (!exists) {
-      unique.push(pt);
-    }
-  }
-
-  if (unique.length < 2) {
-    return null;
-  }
-
-  let bestA = unique[0];
-  let bestB = unique[1];
-  let bestDist = -1;
-
-  for (let i = 0; i < unique.length; i += 1) {
-    for (let j = i + 1; j < unique.length; j += 1) {
-      const dx = unique[i].x - unique[j].x;
-      const dy = unique[i].y - unique[j].y;
-      const dist = dx * dx + dy * dy;
-      if (dist > bestDist) {
-        bestDist = dist;
-        bestA = unique[i];
-        bestB = unique[j];
-      }
-    }
-  }
-
-  return [bestA, bestB];
-}
-
 const varsResolver = createVarsResolver<CompareFactory>((_, { aspectRatio }) => ({
   root: {
     '--compare-aspect-ratio': aspectRatio || '16/9',
@@ -300,7 +140,6 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
 
   const [position, setPosition] = useState(defaultPosition || 50);
   const containerRef = useRef<HTMLDivElement>(null);
-  const isDragging = useRef(false);
 
   const {
     ref: sizeRef,
@@ -313,8 +152,7 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
     const height = containerHeight;
     const pos = clampNumber(position, 0, 100);
 
-    const rad = (normalizedAngle * Math.PI) / 180;
-    const normal: Point = { x: Math.cos(rad), y: Math.sin(rad) };
+    const normal = getNormalFromAngle(normalizedAngle);
 
     if (width <= 0 || height <= 0) {
       return {
@@ -330,10 +168,7 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
       };
     }
 
-    const corners = getRectCorners(width, height);
-    const projections = corners.map((c) => dot(normal, c));
-    const min = Math.min(...projections);
-    const max = Math.max(...projections);
+    const { corners, min, max } = projectCornersRange(width, height, normal);
     const p = min + (pos / 100) * (max - min);
 
     const leftPoly = clipPolygonHalfPlane(corners, normal, p, true);
@@ -388,15 +223,16 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
       const x = clientX - rect.left;
       const y = clientY - rect.top;
 
-      const rad = (normalizedAngle * Math.PI) / 180;
-      const normal: Point = { x: Math.cos(rad), y: Math.sin(rad) };
+      const normal = getNormalFromAngle(normalizedAngle);
+      const { min, max } = projectCornersRange(rect.width, rect.height, normal);
+      const denom = max - min;
 
-      const corners = getRectCorners(rect.width, rect.height);
-      const projections = corners.map((c) => dot(normal, c));
-      const min = Math.min(...projections);
-      const max = Math.max(...projections);
-      const value = dot(normal, { x, y });
-      const newPosition = clampNumber(((value - min) / (max - min)) * 100, 0, 100);
+      if (Math.abs(denom) < 1e-9) {
+        return;
+      }
+
+      const value = projectPoint(normal, { x, y });
+      const newPosition = clampNumber(((value - min) / denom) * 100, 0, 100);
 
       setPosition(newPosition);
       onPositionChange?.(newPosition);
@@ -421,13 +257,11 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
   );
 
   const handleMouseUp = useCallback(() => {
-    isDragging.current = false;
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);
   }, [handleMouseMove]);
 
   const handleTouchEnd = useCallback(() => {
-    isDragging.current = false;
     document.removeEventListener(
       'touchmove',
       handleTouchMove as EventListener,
@@ -440,7 +274,6 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
     if (variant === 'fixed') {
       return;
     }
-    isDragging.current = true;
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   }, [variant, handleMouseMove, handleMouseUp]);
@@ -449,7 +282,6 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
     if (variant === 'fixed') {
       return;
     }
-    isDragging.current = true;
     document.addEventListener('touchmove', handleTouchMove, { passive: false });
     document.addEventListener('touchend', handleTouchEnd);
   }, [variant, handleTouchMove, handleTouchEnd]);
