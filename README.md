@@ -1,6 +1,7 @@
-# Mantine Json Tree Component
+# Mantine Compare Component
 
-<img width="2752" height="1536" alt="Mantine Json Tree" src="https://github.com/user-attachments/assets/26d79eca-a2e8-4d5c-a62f-6bf075573a16" />
+<img width="2752" height="1536" alt="Mantine Compare" src="https://github.com/user-attachments/assets/976c8ac5-aab6-4752-849c-d89c820bc91d" />
+
 
 <div align="center">
   
@@ -51,14 +52,30 @@ import '@gfazioli/mantine-compare/styles.css';
 
 ```tsx
 import { Compare } from '@gfazioli/mantine-compare';
+import { Image } from '@mantine/core';
 
 function Demo() {
-  return <Compare data={{ key: "value" }} />;
+  return (
+    <Compare
+      leftSection={
+        <Image
+          src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop"
+          alt="Before"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      }
+      rightSection={
+        <Image
+          src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&auto=format&fit=crop"
+          alt="After"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      }
+    />
+  );
 }
 ```
 
 <div align="center">
   
 [![Star History Chart](https://api.star-history.com/svg?repos=gfazioli/mantine-compare&type=Timeline)](https://www.star-history.com/#gfazioli/mantine-compare&Timeline)
-
-https://github.com/user-attachments/assets/ce2b1ba2-51f7-43d5-8477-6d8fee103fa3
