@@ -39,7 +39,7 @@ export type CompareStylesNames =
   | 'sliderButton';
 
 export type CompareCssVariables = {
-  root: '--compare-aspect-ratio';
+  root: '--compare-aspect-ratio' | '--compare-radius';
 };
 
 export interface CompareProps extends BoxProps, StylesApiProps<CompareFactory> {
