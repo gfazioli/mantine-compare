@@ -13,7 +13,7 @@ export const CompareStylesApi: StylesApiData<CompareFactory> = {
 
   vars: {
     root: {
-      '--compare-aspect-ratio': 'Font family for the JSON tree',
+      '--compare-aspect-ratio': 'Aspect ratio for the compare container',
       '--compare-radius': 'Border radius for the compare container',
     },
   },
