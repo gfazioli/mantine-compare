@@ -1,0 +1,18 @@
+.root {
+  background-color: var(--mantine-color-gray-0);
+
+  @mixin dark {
+    background-color: var(--mantine-color-dark-8);
+  }
+}
+
+.sliderLine {
+  background-color: var(--mantine-color-dark-1);
+
+  @mixin dark {
+    background-color: var(--mantine-color-dark-6);
+  }
+
+  height: 16px;
+  filter: blur(8px);
+}
