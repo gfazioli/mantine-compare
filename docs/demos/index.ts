@@ -1,6 +1,7 @@
 export { angle } from './Compare.demo.angle';
 export { codeSyntax } from './Compare.demo.code';
 export { configurator } from './Compare.demo.configurator';
+export { dragBounds } from './Compare.demo.dragBounds';
 export { fixed } from './Compare.demo.fixed';
 export { horizontal } from './Compare.demo.horizontal';
 export { hover } from './Compare.demo.hover';

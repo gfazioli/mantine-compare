@@ -9,12 +9,16 @@ export default {
     defaultPosition: 50,
     angle: 0,
     radius: 'md',
+    minDragBound: 0,
+    maxDragBound: 100,
   },
   argTypes: {
     aspectRatio: { control: 'text' },
     defaultPosition: { control: { type: 'number', min: 0, max: 100 } },
     angle: { control: { type: 'number', min: 0, max: 360, step: 1 } },
     radius: { control: { type: 'number', min: 0, max: 256, step: 1 } },
+    minDragBound: { control: { type: 'number', min: 0, max: 100, step: 1 } },
+    maxDragBound: { control: { type: 'number', min: 0, max: 100, step: 1 } },
   },
 };
 
