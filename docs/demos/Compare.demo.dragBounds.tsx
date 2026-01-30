@@ -1,54 +1,16 @@
-import { Compare, CompareProps } from '@gfazioli/mantine-compare';
+import { Compare } from '@gfazioli/mantine-compare';
 import { Box, Text } from '@mantine/core';
 import { MantineDemo } from '@mantinex/demo';
 
-function Demo(props: CompareProps) {
-  return (
-    <Compare
-      {...props}
-      leftSection={
-        <Box
-          style={{
-            background: 'linear-gradient(45deg, #667eea 0%, #764ba2 100%)',
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Text size="xl" c="white" fw={700}>
-            Before (leftSection)
-          </Text>
-        </Box>
-      }
-      rightSection={
-        <Box
-          style={{
-            background: 'linear-gradient(45deg, #f093fb 0%, #f5576c 100%)',
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Text size="xl" c="white" fw={700}>
-            After (rightSection)
-          </Text>
-        </Box>
-      }
-    />
-  );
-}
-
-const code = `
-import { Compare } from "@gfazioli/mantine-compare";
-import { data } from './data';
+const code = `import { Compare } from '@gfazioli/mantine-compare';
+import { Box, Text } from '@mantine/core';
 
 function Demo() {
-    return (
-    <Compare{{props}}
+  return (
+    <Compare
+      angle={30}
+      minDragBound={20}
+      maxDragBound={80}
       leftSection={
         <Box
           style={{
@@ -61,7 +23,7 @@ function Demo() {
           }}
         >
           <Text size="xl" c="white" fw={700}>
-            Before
+            Left Section
           </Text>
         </Box>
       }
@@ -77,59 +39,59 @@ function Demo() {
           }}
         >
           <Text size="xl" c="white" fw={700}>
-            After
+            Right Section
+          </Text>
+        </Box>
+      }
+    />
+  );
+}`;
+
+function Demo() {
+  return (
+    <Compare
+      angle={30}
+      minDragBound={20}
+      maxDragBound={80}
+      leftSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #667eea 0%, #764ba2 100%)',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text size="xl" c="white" fw={700}>
+            Left Section
+          </Text>
+        </Box>
+      }
+      rightSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #f093fb 0%, #f5576c 100%)',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text size="xl" c="white" fw={700}>
+            Right Section
           </Text>
         </Box>
       }
     />
   );
 }
-`;
 
-export const configurator: MantineDemo = {
-  type: 'configurator',
+export const dragBounds: MantineDemo = {
+  type: 'code',
+  code,
   component: Demo,
-  code: [{ fileName: 'Demo.tsx', code, language: 'tsx' }],
-  controls: [
-    {
-      type: 'segmented',
-      prop: 'variant',
-      initialValue: 'drag',
-      libraryValue: 'drag',
-      data: [
-        { value: 'drag', label: 'Drag' },
-        { value: 'hover', label: 'Hover' },
-        { value: 'fixed', label: 'Fixed' },
-      ],
-    },
-    { type: 'size', prop: 'radius', initialValue: 'md', libraryValue: 'md' },
-    {
-      type: 'number',
-      prop: 'angle',
-      initialValue: 0,
-      libraryValue: 0,
-      min: 0,
-      max: 360,
-      step: 1,
-    },
-    {
-      type: 'number',
-      prop: 'minDragBound',
-      initialValue: 0,
-      libraryValue: 0,
-      min: 0,
-      max: 100,
-      step: 1,
-    },
-    {
-      type: 'number',
-      prop: 'maxDragBound',
-      initialValue: 100,
-      libraryValue: 100,
-      min: 0,
-      max: 100,
-      step: 1,
-    },
-    { type: 'string', prop: 'aspectRatio', initialValue: undefined as any, libraryValue: null },
-  ],
+  defaultExpanded: false,
 };

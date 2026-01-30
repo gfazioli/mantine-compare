@@ -51,6 +51,17 @@ Set `angle` to any value between `0` and `360` to get an oblique divider.
 
 <Demo data={demos.angle} />
 
+## Drag boundaries
+
+Use `minDragBound` and `maxDragBound` props to limit the slider movement range. Both props accept percentage values (0-100):
+
+- `minDragBound` - controls how far left/top the slider can be dragged (default: 0)
+- `maxDragBound` - controls how far right/bottom the slider can be dragged (default: 100)
+
+These boundaries work with any angle setting, making it useful for preventing the slider from completely hiding either section.
+
+<Demo data={demos.dragBounds} />
+
 ## Variants
 
 The `Compare` component supports three interaction variants:
