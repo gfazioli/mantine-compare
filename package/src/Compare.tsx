@@ -78,6 +78,20 @@ export interface CompareProps extends BoxProps, StylesApiProps<CompareFactory> {
 
   /** Icon for the slider button */
   sliderIcon?: React.ReactNode;
+
+  /**
+   * Minimum drag boundary in percentage (0-100).
+   * Controls how far left/top the slider can be dragged.
+   * @default 0
+   */
+  minDragBound?: number;
+
+  /**
+   * Maximum drag boundary in percentage (0-100).
+   * Controls how far right/bottom the slider can be dragged.
+   * @default 100
+   */
+  maxDragBound?: number;
 }
 
 export type CompareFactory = Factory<{
@@ -94,6 +108,8 @@ const defaultProps: Partial<CompareProps> = {
   defaultPosition: 50,
   angle: 0,
   radius: 'md',
+  minDragBound: 0,
+  maxDragBound: 100,
 };
 
 const varsResolver = createVarsResolver<CompareFactory>((_, { aspectRatio, radius }) => ({
@@ -116,6 +132,8 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
     defaultPosition,
     onPositionChange,
     sliderIcon,
+    minDragBound,
+    maxDragBound,
     classNames,
     style,
     styles,
@@ -235,8 +253,9 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
 
       const rect = containerRef.current.getBoundingClientRect();
 
-      const x = clientX - rect.left;
-      const y = clientY - rect.top;
+      // Clamp coordinates to container bounds with 1px margin to prevent handle from jumping
+      const x = clampNumber(clientX - rect.left, 1, rect.width - 1);
+      const y = clampNumber(clientY - rect.top, 1, rect.height - 1);
 
       const normal = getNormalFromAngle(normalizedAngle);
       const { min, max } = projectCornersRange(rect.width, rect.height, normal);
@@ -247,12 +266,20 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
       }
 
       const value = projectPoint(normal, { x, y });
-      const newPosition = clampNumber(((value - min) / denom) * 100, 0, 100);
+      const rawPosition = ((value - min) / denom) * 100;
+
+      // Apply drag boundaries
+      const minBound = clampNumber(minDragBound || 0, 0, 100);
+      const maxBound = clampNumber(maxDragBound || 100, 0, 100);
+      const effectiveMin = Math.min(minBound, maxBound);
+      const effectiveMax = Math.max(minBound, maxBound);
+
+      const newPosition = clampNumber(rawPosition, effectiveMin, effectiveMax);
 
       setPosition(newPosition);
       onPositionChange?.(newPosition);
     },
-    [normalizedAngle, onPositionChange]
+    [normalizedAngle, onPositionChange, minDragBound, maxDragBound]
   );
 
   const handleMouseMove = useCallback(
