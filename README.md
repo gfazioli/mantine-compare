@@ -1,6 +1,6 @@
 # Mantine Compare Component
 
-<img alt="Mantine Compare" src="https://github.com/gfazioli/mantine-compare/blob/master/logo.png" />
+<img alt="Mantine Compare" src="https://github.com/gfazioli/mantine-compare/blob/master/logo.jpeg" />
 
 <div align="center">
   
