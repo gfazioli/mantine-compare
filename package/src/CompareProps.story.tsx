@@ -57,5 +57,5 @@ export function UsageProps(props: CompareProps) {
     </Box>
   );
 
-  return <Compare leftSection={leftSection} rightSection={rightSection} {...props} />;
+  return <Compare {...props} leftSection={leftSection} rightSection={rightSection} />;
 }
