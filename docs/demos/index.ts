@@ -5,5 +5,6 @@ export { dragBounds } from './Compare.demo.dragBounds';
 export { fixed } from './Compare.demo.fixed';
 export { horizontal } from './Compare.demo.horizontal';
 export { hover } from './Compare.demo.hover';
+export { keyboard } from './Compare.demo.keyboard';
 export { stylesApi } from './Compare.demo.stylesApi';
 export { withImage } from './Compare.demo.withImage';

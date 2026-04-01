@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { IconArrowsLeftRight } from '@tabler/icons-react';
 import {
   ActionIcon,
@@ -331,6 +331,16 @@ export const Compare = factory<CompareFactory>((_props) => {
     document.addEventListener('touchend', handleTouchEnd);
   }, [variant, handleTouchMove, handleTouchEnd]);
 
+  // Cleanup document listeners on unmount to prevent memory leaks during drag
+  useEffect(() => {
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchmove', handleTouchMove as EventListener);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
+
   const handleContainerMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (variant !== 'hover') {
@@ -339,6 +349,37 @@ export const Compare = factory<CompareFactory>((_props) => {
       updatePosition(e.clientX, e.clientY);
     },
     [variant, updatePosition]
+  );
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (variant === 'fixed') {
+        return;
+      }
+
+      const step = e.shiftKey ? 10 : 1;
+      let newPosition: number | null = null;
+
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        newPosition = Math.max(minDragBound ?? 0, position - step);
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        newPosition = Math.min(maxDragBound ?? 100, position + step);
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        newPosition = minDragBound ?? 0;
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        newPosition = maxDragBound ?? 100;
+      }
+
+      if (newPosition !== null) {
+        setPosition(newPosition);
+        onPositionChange?.(newPosition);
+      }
+    },
+    [variant, position, minDragBound, maxDragBound, onPositionChange]
   );
 
   return (
@@ -374,8 +415,15 @@ export const Compare = factory<CompareFactory>((_props) => {
         {...getStyles('slider', {
           style: geometry.sliderStyle,
         })}
+        role="slider"
+        tabIndex={variant !== 'fixed' ? 0 : undefined}
+        aria-valuenow={Math.round(position)}
+        aria-valuemin={minDragBound ?? 0}
+        aria-valuemax={maxDragBound ?? 100}
+        aria-label="Compare slider"
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
+        onKeyDown={handleKeyDown}
       >
         <Box {...getStyles('sliderLine')} />
         {variant === 'drag' && (

@@ -82,6 +82,20 @@ Set `variant="fixed"` to display a static comparison at a specific position. The
 
 <Demo data={demos.fixed} />
 
+## Keyboard navigation
+
+The `Compare` slider supports keyboard navigation. Click on the slider to focus it, then use:
+
+- **Arrow Left/Down**: Move slider by 1%
+- **Arrow Right/Up**: Move slider by 1%
+- **Shift + Arrow**: Move slider by 10%
+- **Home**: Move to minimum position
+- **End**: Move to maximum position
+
+Keyboard navigation respects `minDragBound` and `maxDragBound` constraints and is disabled for the `fixed` variant.
+
+<Demo data={demos.keyboard} />
+
 ## Styles API
 
 `Compare` supports [Styles API](https://mantine.dev/styles/styles-api/), you can add styles to any inner element of the component with `classNames` prop. Follow [Styles API](https://mantine.dev/styles/styles-api/) documentation to learn more.

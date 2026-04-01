@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@mantine-tests/core';
+import { fireEvent } from '@testing-library/react';
 import { Compare } from './Compare';
 
 describe('Compare', () => {
@@ -120,5 +121,177 @@ describe('Compare', () => {
 
     const sliderLine = container.querySelector('[class*="sliderLine"]');
     expect(sliderLine).toBeTruthy();
+  });
+
+  it('slider has role="slider" with ARIA attributes', () => {
+    const { container } = render(
+      <Compare
+        leftSection={<div>Left</div>}
+        rightSection={<div>Right</div>}
+        defaultPosition={30}
+        minDragBound={10}
+        maxDragBound={90}
+      />
+    );
+
+    const slider = container.querySelector('[role="slider"]') as HTMLElement | null;
+    expect(slider).toBeTruthy();
+    expect(slider?.getAttribute('aria-valuenow')).toBe('30');
+    expect(slider?.getAttribute('aria-valuemin')).toBe('10');
+    expect(slider?.getAttribute('aria-valuemax')).toBe('90');
+    expect(slider?.getAttribute('aria-label')).toBe('Compare slider');
+  });
+
+  it('slider has tabIndex for keyboard focus (drag variant)', () => {
+    const { container } = render(
+      <Compare leftSection={<div>Left</div>} rightSection={<div>Right</div>} />
+    );
+
+    const slider = container.querySelector('[role="slider"]') as HTMLElement | null;
+    expect(slider?.getAttribute('tabindex')).toBe('0');
+  });
+
+  it('slider has no tabIndex for fixed variant', () => {
+    const { container } = render(
+      <Compare variant="fixed" leftSection={<div>Left</div>} rightSection={<div>Right</div>} />
+    );
+
+    const slider = container.querySelector('[role="slider"]') as HTMLElement | null;
+    expect(slider?.getAttribute('tabindex')).toBeNull();
+  });
+
+  it('calls onPositionChange when ArrowRight is pressed', () => {
+    const onPositionChange = jest.fn();
+    const { container } = render(
+      <Compare
+        leftSection={<div>Left</div>}
+        rightSection={<div>Right</div>}
+        defaultPosition={50}
+        onPositionChange={onPositionChange}
+      />
+    );
+
+    const slider = container.querySelector('[role="slider"]') as HTMLElement;
+    fireEvent.keyDown(slider, { key: 'ArrowRight' });
+    expect(onPositionChange).toHaveBeenCalledWith(51);
+  });
+
+  it('calls onPositionChange with 10% step when Shift+ArrowRight is pressed', () => {
+    const onPositionChange = jest.fn();
+    const { container } = render(
+      <Compare
+        leftSection={<div>Left</div>}
+        rightSection={<div>Right</div>}
+        defaultPosition={50}
+        onPositionChange={onPositionChange}
+      />
+    );
+
+    const slider = container.querySelector('[role="slider"]') as HTMLElement;
+    fireEvent.keyDown(slider, { key: 'ArrowRight', shiftKey: true });
+    expect(onPositionChange).toHaveBeenCalledWith(60);
+  });
+
+  it('respects minDragBound on ArrowLeft', () => {
+    const onPositionChange = jest.fn();
+    const { container } = render(
+      <Compare
+        leftSection={<div>Left</div>}
+        rightSection={<div>Right</div>}
+        defaultPosition={20}
+        minDragBound={20}
+        onPositionChange={onPositionChange}
+      />
+    );
+
+    const slider = container.querySelector('[role="slider"]') as HTMLElement;
+    fireEvent.keyDown(slider, { key: 'ArrowLeft' });
+    expect(onPositionChange).toHaveBeenCalledWith(20);
+  });
+
+  it('respects maxDragBound on ArrowRight', () => {
+    const onPositionChange = jest.fn();
+    const { container } = render(
+      <Compare
+        leftSection={<div>Left</div>}
+        rightSection={<div>Right</div>}
+        defaultPosition={80}
+        maxDragBound={80}
+        onPositionChange={onPositionChange}
+      />
+    );
+
+    const slider = container.querySelector('[role="slider"]') as HTMLElement;
+    fireEvent.keyDown(slider, { key: 'ArrowRight' });
+    expect(onPositionChange).toHaveBeenCalledWith(80);
+  });
+
+  it('Home key moves to minDragBound', () => {
+    const onPositionChange = jest.fn();
+    const { container } = render(
+      <Compare
+        leftSection={<div>Left</div>}
+        rightSection={<div>Right</div>}
+        defaultPosition={50}
+        minDragBound={10}
+        onPositionChange={onPositionChange}
+      />
+    );
+
+    const slider = container.querySelector('[role="slider"]') as HTMLElement;
+    fireEvent.keyDown(slider, { key: 'Home' });
+    expect(onPositionChange).toHaveBeenCalledWith(10);
+  });
+
+  it('End key moves to maxDragBound', () => {
+    const onPositionChange = jest.fn();
+    const { container } = render(
+      <Compare
+        leftSection={<div>Left</div>}
+        rightSection={<div>Right</div>}
+        defaultPosition={50}
+        maxDragBound={90}
+        onPositionChange={onPositionChange}
+      />
+    );
+
+    const slider = container.querySelector('[role="slider"]') as HTMLElement;
+    fireEvent.keyDown(slider, { key: 'End' });
+    expect(onPositionChange).toHaveBeenCalledWith(90);
+  });
+
+  it('keyboard does not work on fixed variant', () => {
+    const onPositionChange = jest.fn();
+    const { container } = render(
+      <Compare
+        variant="fixed"
+        leftSection={<div>Left</div>}
+        rightSection={<div>Right</div>}
+        defaultPosition={50}
+        onPositionChange={onPositionChange}
+      />
+    );
+
+    const slider = container.querySelector('[role="slider"]') as HTMLElement;
+    fireEvent.keyDown(slider, { key: 'ArrowRight' });
+    expect(onPositionChange).not.toHaveBeenCalled();
+  });
+
+  it('renders custom slider icon', () => {
+    const { container } = render(
+      <Compare
+        leftSection={<div>Left</div>}
+        rightSection={<div>Right</div>}
+        sliderIcon={<span data-testid="custom-icon">⇔</span>}
+      />
+    );
+
+    expect(container.querySelector('[data-testid="custom-icon"]')).toBeTruthy();
+  });
+
+  it('forwards ref', () => {
+    const ref = React.createRef<HTMLDivElement>();
+    render(<Compare ref={ref} leftSection={<div>Left</div>} rightSection={<div>Right</div>} />);
+    expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
 });

@@ -1,15 +1,13 @@
 import { Compare } from '@gfazioli/mantine-compare';
 import { Box, Text } from '@mantine/core';
 import { MantineDemo } from '@mantinex/demo';
-import { CompareStylesApi } from '../styles-api/Compare.styles-api';
 
-const code = `
-import { Compare } from '@gfazioli/mantine-compare';
+const code = `import { Compare } from '@gfazioli/mantine-compare';
 import { Box, Text } from '@mantine/core';
 
 function Demo() {
   return (
-    <Compare{{props}}
+    <Compare
       leftSection={
         <Box
           style={{
@@ -43,7 +41,7 @@ function Demo() {
 }
 `;
 
-function Demo(props: any) {
+function Demo() {
   return (
     <Compare
       leftSection={
@@ -78,16 +76,15 @@ function Demo(props: any) {
           </Text>
         </Box>
       }
-      {...props}
     />
   );
 }
 
-export const stylesApi: MantineDemo = {
-  type: 'styles-api',
-  data: CompareStylesApi,
+export const keyboard: MantineDemo = {
+  type: 'code',
   component: Demo,
   code,
   centered: true,
-  maxWidth: 340,
+  maxWidth: 540,
+  defaultExpanded: false,
 };
