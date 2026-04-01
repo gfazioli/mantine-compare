@@ -8,11 +8,16 @@
   "author": "Giovambattista Fazioli <giovambattista.fazioli@gmail.com>",
   "keywords": [
     "compare",
+    "component",
     "extension",
-    "json-view",
+    "image-compare",
     "mantine",
+    "mantine-ui",
+    "mantine-v9",
     "react",
     "react-component",
+    "side-by-side",
+    "slider",
     "typescript"
   ],
   "main": "./dist/cjs/index.cjs",

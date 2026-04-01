@@ -47,7 +47,7 @@ export function WithWidth() {
   return (
     <Compare
       w={300}
-      bdrs={16}
+      radius={16}
       leftSection={
         <Box
           style={{
@@ -334,5 +334,95 @@ export function WithCallback() {
         }
       />
     </div>
+  );
+}
+
+export function KeyboardNavigation() {
+  const [pos, setPos] = React.useState(50);
+  return (
+    <div>
+      <Text size="sm" mb="xs">
+        Position: {pos}% — Use arrow keys (±1%), Shift+arrow (±10%), Home/End
+      </Text>
+      <Compare
+        w={500}
+        defaultPosition={50}
+        onPositionChange={setPos}
+        leftSection={
+          <Box
+            style={{
+              background: 'linear-gradient(45deg, #667eea 0%, #764ba2 100%)',
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Text size="xl" c="white" fw={700}>
+              Before
+            </Text>
+          </Box>
+        }
+        rightSection={
+          <Box
+            style={{
+              background: 'linear-gradient(45deg, #f093fb 0%, #f5576c 100%)',
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Text size="xl" c="white" fw={700}>
+              After
+            </Text>
+          </Box>
+        }
+      />
+    </div>
+  );
+}
+
+export function WithDragBounds() {
+  return (
+    <Compare
+      w={500}
+      minDragBound={20}
+      maxDragBound={80}
+      leftSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #667eea 0%, #764ba2 100%)',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text size="xl" c="white" fw={700}>
+            Min 20%
+          </Text>
+        </Box>
+      }
+      rightSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #f093fb 0%, #f5576c 100%)',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text size="xl" c="white" fw={700}>
+            Max 80%
+          </Text>
+        </Box>
+      }
+    />
   );
 }

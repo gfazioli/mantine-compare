@@ -20,7 +20,22 @@
 This component is created on top of the [Mantine](https://mantine.dev/) library.
 It requires **Mantine 9.x** and **React 19**.
 
-[Mantine Compare](https://gfazioli.github.io/mantine-compare/) provides an interactive before/after viewer for any React nodes or images, with a slider you can drag, reveal on hover, or lock to a position. Configure the divider angle (0° for left/right, 90° for top/bottom, any value for diagonal) and control the initial split via defaultPosition. Built for Mantine, it includes a Styles API for fine‑grained styling and consistent layout and accessibility.
+[Mantine Compare](https://gfazioli.github.io/mantine-compare/) provides an interactive before/after viewer for any React nodes or images, with a slider you can drag, reveal on hover, or lock to a position.
+
+## Features
+
+- 🎨 **Three interaction modes**: Drag, hover, and fixed variants
+- 📐 **Flexible angle system**: Vertical (0°), horizontal (90°), or any diagonal angle
+- 🖼️ **Any content**: Compare images, code, text, or any React nodes
+- 🔒 **Drag boundaries**: Constrain the slider range with `minDragBound`/`maxDragBound`
+- ♿ **Accessible**: Keyboard navigation (arrow keys, Home/End), ARIA slider role
+- 🎨 **Styles API**: Full Mantine Styles API support for custom styling
+- 📱 **Touch support**: Drag works on touch devices
+- 📦 **TypeScript**: Full type safety out of the box
+
+> [!note]
+>
+> → [Demo and Documentation](https://gfazioli.github.io/mantine-compare/) → [More Mantine Components](https://mantine-extensions.vercel.app/)
 
 ## Installation
 
