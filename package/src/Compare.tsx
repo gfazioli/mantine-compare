@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { IconArrowsLeftRight } from '@tabler/icons-react';
 import {
   ActionIcon,
@@ -7,13 +7,16 @@ import {
   Factory,
   factory,
   getRadius,
+  getThemeColor,
   StylesApiProps,
+  Text,
   useProps,
   useStyles,
   type BoxProps,
+  type MantineColor,
   type MantineRadius,
 } from '@mantine/core';
-import { useElementSize, useMergedRef } from '@mantine/hooks';
+import { useElementSize, useIntersection, useMergedRef, useUncontrolled } from '@mantine/hooks';
 import {
   clampNumber,
   clipPolygonHalfPlane,
@@ -36,10 +39,16 @@ export type CompareStylesNames =
   | 'rightSection'
   | 'slider'
   | 'sliderLine'
-  | 'sliderButton';
+  | 'sliderButton'
+  | 'leftLabel'
+  | 'rightLabel';
 
 export type CompareCssVariables = {
-  root: '--compare-aspect-ratio' | '--compare-radius';
+  root:
+    | '--compare-aspect-ratio'
+    | '--compare-radius'
+    | '--compare-slider-color'
+    | '--compare-slider-width';
 };
 
 export interface CompareProps extends BoxProps, StylesApiProps<CompareFactory> {
@@ -55,22 +64,21 @@ export interface CompareProps extends BoxProps, StylesApiProps<CompareFactory> {
   /** Aspect ratio of the container @default '16/9' */
   aspectRatio?: string;
 
-  /** Border radius
-   * @default 'md'
-   */
+  /** Border radius @default 'md' */
   radius?: MantineRadius | (string & {}) | number;
 
   /**
    * Angle of the divider in degrees (0-360).
-   *
-   * `angle={0}` behaves like the previous vertical direction (left/right compare).
-   * `angle={90}` behaves like the previous horizontal direction (top/bottom compare).
-   *
+   * `angle={0}` = vertical divider (left/right compare).
+   * `angle={90}` = horizontal divider (top/bottom compare).
    * @default 0
    */
   angle?: number;
 
-  /** Initial position of the slider (0-100) @default 50 */
+  /** Controlled slider position (0-100) */
+  position?: number;
+
+  /** Initial position of the slider (0-100), used in uncontrolled mode @default 50 */
   defaultPosition?: number;
 
   /** Callback when the slider position changes */
@@ -79,19 +87,47 @@ export interface CompareProps extends BoxProps, StylesApiProps<CompareFactory> {
   /** Icon for the slider button */
   sliderIcon?: React.ReactNode;
 
-  /**
-   * Minimum drag boundary in percentage (0-100).
-   * Controls how far left/top the slider can be dragged.
-   * @default 0
-   */
+  /** Minimum drag boundary in percentage (0-100) @default 0 */
   minDragBound?: number;
 
-  /**
-   * Maximum drag boundary in percentage (0-100).
-   * Controls how far right/bottom the slider can be dragged.
-   * @default 100
-   */
+  /** Maximum drag boundary in percentage (0-100) @default 100 */
   maxDragBound?: number;
+
+  /** Label displayed on the left section */
+  leftLabel?: React.ReactNode;
+
+  /** Label displayed on the right section */
+  rightLabel?: React.ReactNode;
+
+  /** Disables all interactions @default false */
+  disabled?: boolean;
+
+  /** Keyboard step size in percentage (1-50) @default 1 */
+  keyboardStep?: number;
+
+  /** Keyboard step size with Shift key @default 10 */
+  keyboardShiftStep?: number;
+
+  /** Slider divider color */
+  sliderColor?: MantineColor;
+
+  /** Slider divider width in px @default 2 */
+  sliderWidth?: number;
+
+  /** Auto-play: continuously slides back and forth @default false */
+  autoPlay?: boolean;
+
+  /** Auto-play speed (1-100), higher = faster @default 50 */
+  autoPlaySpeed?: number;
+
+  /** Auto-play easing function @default 'linear' */
+  autoPlayEasing?: 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'spring';
+
+  /** Only allow drag from the handle button, not the entire slider line @default false */
+  handleOnly?: boolean;
+
+  /** Called when the component enters the viewport */
+  onVisible?: () => void;
 }
 
 export type CompareFactory = Factory<{
@@ -110,14 +146,22 @@ const defaultProps: Partial<CompareProps> = {
   radius: 'md',
   minDragBound: 0,
   maxDragBound: 100,
+  keyboardStep: 1,
+  keyboardShiftStep: 10,
+  sliderWidth: 2,
+  autoPlaySpeed: 50,
 };
 
-const varsResolver = createVarsResolver<CompareFactory>((_, { aspectRatio, radius }) => ({
-  root: {
-    '--compare-aspect-ratio': aspectRatio || '16/9',
-    '--compare-radius': radius === undefined ? undefined : getRadius(radius),
-  },
-}));
+const varsResolver = createVarsResolver<CompareFactory>(
+  (theme, { aspectRatio, radius, sliderColor, sliderWidth }) => ({
+    root: {
+      '--compare-aspect-ratio': aspectRatio || '16/9',
+      '--compare-radius': radius === undefined ? undefined : getRadius(radius),
+      '--compare-slider-color': sliderColor ? getThemeColor(sliderColor, theme) : undefined,
+      '--compare-slider-width': sliderWidth !== undefined ? `${sliderWidth}px` : undefined,
+    },
+  })
+);
 
 export const Compare = factory<CompareFactory>((_props) => {
   const { ref, ...restProps } = _props as typeof _props & { ref?: React.Ref<HTMLDivElement> };
@@ -130,11 +174,24 @@ export const Compare = factory<CompareFactory>((_props) => {
     aspectRatio,
     angle,
     radius,
+    position: positionProp,
     defaultPosition,
     onPositionChange,
     sliderIcon,
     minDragBound,
     maxDragBound,
+    leftLabel,
+    rightLabel,
+    disabled,
+    keyboardStep,
+    keyboardShiftStep,
+    sliderColor,
+    sliderWidth,
+    autoPlay,
+    autoPlaySpeed,
+    autoPlayEasing,
+    handleOnly,
+    onVisible,
     classNames,
     style,
     styles,
@@ -159,7 +216,22 @@ export const Compare = factory<CompareFactory>((_props) => {
     varsResolver,
   });
 
-  const [position, setPosition] = useState(defaultPosition || 50);
+  const [position, setPosition] = useUncontrolled({
+    value: positionProp,
+    defaultValue: defaultPosition ?? 50,
+    finalValue: 50,
+    onChange: onPositionChange,
+  });
+
+  // Sync position when defaultPosition changes in uncontrolled mode
+  const prevDefaultPosition = useRef(defaultPosition);
+  useEffect(() => {
+    if (positionProp === undefined && defaultPosition !== prevDefaultPosition.current) {
+      prevDefaultPosition.current = defaultPosition;
+      setPosition(defaultPosition ?? 50);
+    }
+  }, [defaultPosition, positionProp]);
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -169,6 +241,97 @@ export const Compare = factory<CompareFactory>((_props) => {
   } = useElementSize<HTMLDivElement>();
 
   const mergedRef = useMergedRef(ref as React.Ref<HTMLDivElement>, containerRef, sizeRef);
+
+  // Viewport detection
+  const { ref: intersectionRef, entry } = useIntersection({ threshold: 0.1 });
+  const hasBeenVisible = useRef(false);
+
+  useEffect(() => {
+    if (entry?.isIntersecting && !hasBeenVisible.current) {
+      hasBeenVisible.current = true;
+      onVisible?.();
+    }
+  }, [entry?.isIntersecting, onVisible]);
+
+  // Auto-play
+  const autoPlayDirection = useRef(1);
+  const autoPlayRaf = useRef<number>(0);
+  const autoPlayPosition = useRef(position);
+  const isHoveredRef = useRef(false);
+
+  // Keep auto-play position in sync with external changes
+  useEffect(() => {
+    autoPlayPosition.current = position;
+  }, [position]);
+
+  useEffect(() => {
+    if (!autoPlay || disabled) {
+      return undefined;
+    }
+
+    // Clamp to 1-99 to avoid degenerate clip-path at edges (especially with diagonal angles)
+    const minBound = Math.max(minDragBound ?? 0, 1);
+    const maxBound = Math.min(maxDragBound ?? 100, 99);
+    // Convert speed (1-100) to ms per 1%: speed 100 → 5ms, speed 1 → 100ms
+    const clampedSpeed = clampNumber(autoPlaySpeed ?? 50, 1, 100);
+    const baseMsPerPercent = 105 - clampedSpeed;
+    const easing = autoPlayEasing ?? 'linear';
+    let lastTime = performance.now();
+
+    // Easing multiplier based on normalized position in range (0-1)
+    const getEasingMultiplier = (t: number): number => {
+      switch (easing) {
+        case 'ease-in':
+          return 0.3 + 1.7 * t * t;
+        case 'ease-out':
+          return 0.3 + 1.7 * (1 - (1 - t) * (1 - t));
+        case 'ease-in-out':
+          return 0.3 + 1.7 * (t < 0.5 ? 2 * t * t : 1 - 2 * (1 - t) * (1 - t));
+        case 'spring': {
+          const center = Math.abs(t - 0.5) * 2;
+          return 0.2 + 1.8 * (1 - center * center);
+        }
+        default:
+          return 1;
+      }
+    };
+
+    const animate = (now: number) => {
+      const delta = now - lastTime;
+      lastTime = now;
+
+      // Pause animation on hover — skip position update but keep RAF running
+      if (isHoveredRef.current) {
+        autoPlayRaf.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      const range = maxBound - minBound;
+      const normalizedT = range > 0 ? (autoPlayPosition.current - minBound) / range : 0.5;
+      const easingMultiplier = getEasingMultiplier(normalizedT);
+      const step = (delta / baseMsPerPercent) * easingMultiplier;
+      let next = autoPlayPosition.current + step * autoPlayDirection.current;
+
+      if (next >= maxBound) {
+        next = maxBound;
+        autoPlayDirection.current = -1;
+      } else if (next <= minBound) {
+        next = minBound;
+        autoPlayDirection.current = 1;
+      }
+
+      autoPlayPosition.current = next;
+      setPosition(next);
+
+      autoPlayRaf.current = requestAnimationFrame(animate);
+    };
+
+    autoPlayRaf.current = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(autoPlayRaf.current);
+    };
+  }, [autoPlay, disabled, minDragBound, maxDragBound, autoPlaySpeed, autoPlayEasing]);
 
   const geometry = useMemo(() => {
     const width = containerWidth;
@@ -250,13 +413,12 @@ export const Compare = factory<CompareFactory>((_props) => {
 
   const updatePosition = useCallback(
     (clientX: number, clientY: number) => {
-      if (!containerRef.current) {
+      if (!containerRef.current || disabled) {
         return;
       }
 
       const rect = containerRef.current.getBoundingClientRect();
 
-      // Clamp coordinates to container bounds with 1px margin to prevent handle from jumping
       const x = clampNumber(clientX - rect.left, 1, rect.width - 1);
       const y = clampNumber(clientY - rect.top, 1, rect.height - 1);
 
@@ -271,7 +433,6 @@ export const Compare = factory<CompareFactory>((_props) => {
       const value = projectPoint(normal, { x, y });
       const rawPosition = ((value - min) / denom) * 100;
 
-      // Apply drag boundaries
       const minBound = clampNumber(minDragBound || 0, 0, 100);
       const maxBound = clampNumber(maxDragBound || 100, 0, 100);
       const effectiveMin = Math.min(minBound, maxBound);
@@ -280,9 +441,8 @@ export const Compare = factory<CompareFactory>((_props) => {
       const newPosition = clampNumber(rawPosition, effectiveMin, effectiveMax);
 
       setPosition(newPosition);
-      onPositionChange?.(newPosition);
     },
-    [normalizedAngle, onPositionChange, minDragBound, maxDragBound]
+    [normalizedAngle, disabled, minDragBound, maxDragBound]
   );
 
   const handleMouseMove = useCallback(
@@ -310,26 +470,28 @@ export const Compare = factory<CompareFactory>((_props) => {
     document.removeEventListener(
       'touchmove',
       handleTouchMove as EventListener,
-      { passive: false } as AddEventListenerOptions
+      {
+        passive: false,
+      } as AddEventListenerOptions
     );
     document.removeEventListener('touchend', handleTouchEnd);
   }, [handleTouchMove]);
 
   const handleMouseDown = useCallback(() => {
-    if (variant === 'fixed') {
+    if (variant === 'fixed' || disabled) {
       return;
     }
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
-  }, [variant, handleMouseMove, handleMouseUp]);
+  }, [variant, disabled, handleMouseMove, handleMouseUp]);
 
   const handleTouchStart = useCallback(() => {
-    if (variant === 'fixed') {
+    if (variant === 'fixed' || disabled) {
       return;
     }
     document.addEventListener('touchmove', handleTouchMove, { passive: false });
     document.addEventListener('touchend', handleTouchEnd);
-  }, [variant, handleTouchMove, handleTouchEnd]);
+  }, [variant, disabled, handleTouchMove, handleTouchEnd]);
 
   // Cleanup document listeners on unmount to prevent memory leaks during drag
   useEffect(() => {
@@ -343,21 +505,21 @@ export const Compare = factory<CompareFactory>((_props) => {
 
   const handleContainerMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      if (variant !== 'hover') {
+      if (variant !== 'hover' || disabled) {
         return;
       }
       updatePosition(e.clientX, e.clientY);
     },
-    [variant, updatePosition]
+    [variant, disabled, updatePosition]
   );
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (variant === 'fixed') {
+      if (variant === 'fixed' || disabled) {
         return;
       }
 
-      const step = e.shiftKey ? 10 : 1;
+      const step = e.shiftKey ? (keyboardShiftStep ?? 10) : (keyboardStep ?? 1);
       let newPosition: number | null = null;
 
       if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
@@ -376,18 +538,25 @@ export const Compare = factory<CompareFactory>((_props) => {
 
       if (newPosition !== null) {
         setPosition(newPosition);
-        onPositionChange?.(newPosition);
       }
     },
-    [variant, position, minDragBound, maxDragBound, onPositionChange]
+    [variant, disabled, position, minDragBound, maxDragBound, keyboardStep, keyboardShiftStep]
   );
 
   return (
     <Box
-      ref={mergedRef}
+      ref={useMergedRef(mergedRef, intersectionRef)}
       data-angle={normalizedAngle}
       data-variant={variant}
+      data-disabled={disabled || undefined}
+      data-autoplay={autoPlay || undefined}
       onMouseMove={handleContainerMouseMove}
+      onMouseEnter={() => {
+        isHoveredRef.current = true;
+      }}
+      onMouseLeave={() => {
+        isHoveredRef.current = false;
+      }}
       {...getStyles('root')}
       {...others}
     >
@@ -411,23 +580,40 @@ export const Compare = factory<CompareFactory>((_props) => {
         {rightSection}
       </Box>
 
+      {leftLabel && (
+        <Text {...getStyles('leftLabel')} component="span">
+          {leftLabel}
+        </Text>
+      )}
+
+      {rightLabel && (
+        <Text {...getStyles('rightLabel')} component="span">
+          {rightLabel}
+        </Text>
+      )}
+
       <Box
         {...getStyles('slider', {
           style: geometry.sliderStyle,
         })}
         role="slider"
-        tabIndex={variant !== 'fixed' ? 0 : undefined}
+        tabIndex={variant !== 'fixed' && !disabled ? 0 : undefined}
         aria-valuenow={Math.round(position)}
         aria-valuemin={minDragBound ?? 0}
         aria-valuemax={maxDragBound ?? 100}
         aria-label="Compare slider"
-        onMouseDown={handleMouseDown}
-        onTouchStart={handleTouchStart}
+        aria-disabled={disabled || undefined}
+        onMouseDown={handleOnly ? undefined : handleMouseDown}
+        onTouchStart={handleOnly ? undefined : handleTouchStart}
         onKeyDown={handleKeyDown}
       >
         <Box {...getStyles('sliderLine')} />
         {variant === 'drag' && (
-          <Box {...getStyles('sliderButton')}>
+          <Box
+            {...getStyles('sliderButton')}
+            onMouseDown={handleOnly ? handleMouseDown : undefined}
+            onTouchStart={handleOnly ? handleTouchStart : undefined}
+          >
             <ActionIcon variant="filled" color="dark.9" radius="xl" size="lg">
               {resolvedSliderIcon}
             </ActionIcon>

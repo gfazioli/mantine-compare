@@ -24,3 +24,14 @@ class ResizeObserver {
 }
 
 window.ResizeObserver = ResizeObserver;
+
+class IntersectionObserver {
+  constructor(callback) {
+    this._callback = callback;
+  }
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
+window.IntersectionObserver = IntersectionObserver;

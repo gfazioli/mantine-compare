@@ -35,6 +35,12 @@ You can use the `Compare` component to compare two code snippets by passing code
 
 <Demo data={demos.codeSyntax} />
 
+## Labels
+
+Use `leftLabel` and `rightLabel` props to display overlay text labels on each section. Labels are styled with a semi-transparent dark background and positioned at the top corners.
+
+<Demo data={demos.labels} />
+
 ## Angle
 
 Use `angle` to control the divider orientation.
@@ -82,24 +88,46 @@ Set `variant="fixed"` to display a static comparison at a specific position. The
 
 <Demo data={demos.fixed} />
 
+## Disabled
+
+Set `disabled` to prevent all interactions (drag, hover, keyboard). The component appears with reduced opacity.
+
+<Demo data={demos.disabled} />
+
+## Slider styling
+
+Customize the slider divider appearance with `sliderColor` and `sliderWidth` props. Both are exposed as CSS variables for fine-grained control.
+
+<Demo data={demos.sliderStyling} />
+
+## Handle only
+
+Set `handleOnly` to restrict dragging to the handle button only. When enabled, clicking and dragging on the slider line does not move the position — only the circular handle button responds to drag.
+
+<Demo data={demos.handleOnly} />
+
+## Auto-play
+
+Set `autoPlay` to continuously animate the slider back and forth. The animation pauses when the user hovers over the component. Control the speed with `autoPlaySpeed` (ms per 1% of movement, default 30).
+
+<Demo data={demos.autoPlay} />
+
 ## Keyboard navigation
 
 The `Compare` slider supports keyboard navigation. Click on the slider to focus it, then use:
 
-- **Arrow Left/Down**: Move slider by 1%
-- **Arrow Right/Up**: Move slider by 1%
-- **Shift + Arrow**: Move slider by 10%
+- **Arrow Left/Down**: Move slider by `keyboardStep` (default 1%)
+- **Arrow Right/Up**: Move slider by `keyboardStep` (default 1%)
+- **Shift + Arrow**: Move slider by `keyboardShiftStep` (default 10%)
 - **Home**: Move to minimum position
 - **End**: Move to maximum position
 
-Keyboard navigation respects `minDragBound` and `maxDragBound` constraints and is disabled for the `fixed` variant.
+Keyboard navigation respects `minDragBound` and `maxDragBound` constraints and is disabled for `fixed` and `disabled` states.
 
 <Demo data={demos.keyboard} />
 
 ## Styles API
 
 `Compare` supports [Styles API](https://mantine.dev/styles/styles-api/), you can add styles to any inner element of the component with `classNames` prop. Follow [Styles API](https://mantine.dev/styles/styles-api/) documentation to learn more.
-
-You can customize the appearance of the `Compare` component using the Styles API. This allows you to modify styles for various parts of the component, such as the slider, sections, and container.
 
 <Demo data={demos.stylesApi} />

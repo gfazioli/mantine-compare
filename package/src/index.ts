@@ -4,4 +4,5 @@ export type {
   CompareFactory,
   CompareProps,
   CompareStylesNames,
+  CompareVariant,
 } from './Compare';
