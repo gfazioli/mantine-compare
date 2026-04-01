@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 ## Project
-`@gfazioli/mantine-compare` — A Mantine 9 React component for side-by-side content comparison with a draggable, hoverable, or fixed split divider. Supports vertical, horizontal, and diagonal (arbitrary angle) dividers, drag boundaries, and custom slider icons. Requires React 19 and TypeScript 6.
+`@gfazioli/mantine-compare` — A Mantine 9 React component for side-by-side content comparison with a draggable, hoverable, or fixed split divider. Supports vertical, horizontal, and diagonal (arbitrary angle) dividers, drag boundaries, labels, auto-play with easing, disabled state, handle-only mode, viewport detection, and custom slider styling. Requires React 19 and TypeScript 6.
 
 ## Commands
 | Command | Purpose |
@@ -61,25 +61,58 @@ The `angle` prop (0-360°) controls the divider orientation:
 - `90°` = horizontal divider (top/bottom compare)
 - Any value = diagonal divider using CSS `clip-path: polygon()`
 
-The geometry is computed in `lib/compare-geometry.ts` using Sutherland-Hodgman polygon clipping to calculate the correct clip-path polygons for each section at any angle.
+The geometry is computed in `lib/compare-geometry.ts` using Sutherland-Hodgman polygon clipping.
+
+### Controlled & uncontrolled
+- **Uncontrolled**: `defaultPosition` sets the initial position. Syncs when `defaultPosition` changes at runtime.
+- **Controlled**: `position` prop + `onPositionChange` callback via `useUncontrolled`.
+
+### Labels
+`leftLabel` and `rightLabel` render overlay text labels. Styled via `leftLabel`/`rightLabel` Styles API selectors.
 
 ### Drag boundaries
-`minDragBound` and `maxDragBound` (0-100) limit the slider range.
+`minDragBound` and `maxDragBound` (0-100) limit the slider range. Respected by drag, keyboard, and auto-play.
+
+### Disabled state
+`disabled` prop blocks all interactions (drag, hover, keyboard). Renders with `data-disabled` and reduced opacity.
+
+### Handle-only mode
+`handleOnly` restricts drag to the handle button only — clicking/dragging the slider line does not move the position.
+
+### Auto-play
+`autoPlay` continuously animates the slider between min and max bounds using `requestAnimationFrame`. Pauses on hover (via ref, no re-render). Configuration:
+- `autoPlaySpeed` (1-100): higher = faster. Internally converted to ms-per-percent.
+- `autoPlayEasing`: `'linear'` (default), `'ease-in'`, `'ease-out'`, `'ease-in-out'`, `'spring'`. Modulates velocity based on position in the range.
+- Auto-play range clamped to 1-99% to avoid degenerate clip-path at edges with diagonal angles.
+
+### Slider styling
+- `sliderColor` — color of the divider line (theme color or CSS value)
+- `sliderWidth` — width in px (default 2)
+- Both exposed as CSS variables: `--compare-slider-color`, `--compare-slider-width`
+
+### Viewport detection
+`onVisible` callback fires once when the component enters the viewport via `useIntersection`.
 
 ### Accessibility
-- Slider has `role="slider"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax`
-- Keyboard support: Arrow keys (1% step), Shift+Arrow (10% step), Home/End
-- `tabIndex={0}` on slider for focus (not on `fixed` variant)
+- Slider has `role="slider"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax`, `aria-label`
+- Keyboard: Arrow keys (`keyboardStep`, default 1%), Shift+Arrow (`keyboardShiftStep`, default 10%), Home/End
+- `tabIndex={0}` on slider for focus (not on `fixed` or `disabled`)
+- `aria-disabled` when disabled
 
 ### CSS custom properties
 - `--compare-aspect-ratio` — container aspect ratio
 - `--compare-radius` — border radius from theme
+- `--compare-slider-color` — slider divider color
+- `--compare-slider-width` — slider divider width
+
+### Styles API selectors
+`root`, `leftSection`, `rightSection`, `slider`, `sliderLine`, `sliderButton`, `leftLabel`, `rightLabel`
 
 ### Ref handling
-`ref` is extracted from props and merged with `containerRef` (for event handling) and `sizeRef` (from `useElementSize`) via `useMergedRef`.
+`ref` is extracted from props and merged with `containerRef` (for event handling), `sizeRef` (from `useElementSize`), and `intersectionRef` (for viewport detection) via `useMergedRef`.
 
 ## Testing
-Jest with `jsdom` environment, `esbuild-jest` transform, CSS mocked via `identity-obj-proxy`. Tests use `@mantine-tests/core` render helper.
+Jest with `jsdom` environment, `esbuild-jest` transform, CSS mocked via `identity-obj-proxy`. Tests use `@mantine-tests/core` render helper. `IntersectionObserver` mocked in `jsdom.mocks.cjs`.
 
 ## Ecosystem
 This repo is part of the Mantine Extensions ecosystem, derived from the `mantine-base-component` template. See the workspace `CLAUDE.md` (in the parent directory) for:

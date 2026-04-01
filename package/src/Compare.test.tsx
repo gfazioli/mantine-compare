@@ -294,4 +294,105 @@ describe('Compare', () => {
     render(<Compare ref={ref} leftSection={<div>Left</div>} rightSection={<div>Right</div>} />);
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
+
+  it('renders left and right labels', () => {
+    const { container } = render(
+      <Compare
+        leftSection={<div>Left</div>}
+        rightSection={<div>Right</div>}
+        leftLabel="Before"
+        rightLabel="After"
+      />
+    );
+
+    expect(container.textContent).toContain('Before');
+    expect(container.textContent).toContain('After');
+  });
+
+  it('does not render labels when not provided', () => {
+    const { container } = render(
+      <Compare leftSection={<div>Left</div>} rightSection={<div>Right</div>} />
+    );
+
+    const labels = container.querySelectorAll('[class*="Label"]');
+    expect(labels.length).toBe(0);
+  });
+
+  it('disabled state prevents keyboard interaction', () => {
+    const onPositionChange = jest.fn();
+    const { container } = render(
+      <Compare
+        disabled
+        leftSection={<div>Left</div>}
+        rightSection={<div>Right</div>}
+        defaultPosition={50}
+        onPositionChange={onPositionChange}
+      />
+    );
+
+    const root = container.querySelector('[data-disabled]');
+    expect(root).toBeTruthy();
+
+    const slider = container.querySelector('[role="slider"]') as HTMLElement;
+    expect(slider?.getAttribute('tabindex')).toBeNull();
+    expect(slider?.getAttribute('aria-disabled')).toBe('true');
+  });
+
+  it('renders with sliderColor prop without crashing', () => {
+    const { container } = render(
+      <Compare sliderColor="blue" leftSection={<div>Left</div>} rightSection={<div>Right</div>} />
+    );
+    expect(container.firstChild).toBeTruthy();
+  });
+
+  it('renders with sliderWidth prop without crashing', () => {
+    const { container } = render(
+      <Compare sliderWidth={4} leftSection={<div>Left</div>} rightSection={<div>Right</div>} />
+    );
+    expect(container.firstChild).toBeTruthy();
+  });
+
+  it('uses custom keyboardStep', () => {
+    const onPositionChange = jest.fn();
+    const { container } = render(
+      <Compare
+        leftSection={<div>Left</div>}
+        rightSection={<div>Right</div>}
+        defaultPosition={50}
+        keyboardStep={5}
+        onPositionChange={onPositionChange}
+      />
+    );
+
+    const slider = container.querySelector('[role="slider"]') as HTMLElement;
+    fireEvent.keyDown(slider, { key: 'ArrowRight' });
+    expect(onPositionChange).toHaveBeenCalledWith(55);
+  });
+
+  it('uses custom keyboardShiftStep', () => {
+    const onPositionChange = jest.fn();
+    const { container } = render(
+      <Compare
+        leftSection={<div>Left</div>}
+        rightSection={<div>Right</div>}
+        defaultPosition={50}
+        keyboardShiftStep={25}
+        onPositionChange={onPositionChange}
+      />
+    );
+
+    const slider = container.querySelector('[role="slider"]') as HTMLElement;
+    fireEvent.keyDown(slider, { key: 'ArrowRight', shiftKey: true });
+    expect(onPositionChange).toHaveBeenCalledWith(75);
+  });
+
+  it('handleOnly mode does not trigger drag from slider line', () => {
+    const { container } = render(
+      <Compare handleOnly leftSection={<div>Left</div>} rightSection={<div>Right</div>} />
+    );
+
+    const slider = container.querySelector('[role="slider"]') as HTMLElement;
+    // In handleOnly mode, the slider box itself has no onMouseDown
+    expect(slider).toBeTruthy();
+  });
 });

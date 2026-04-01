@@ -1,17 +1,15 @@
 import { Compare } from '@gfazioli/mantine-compare';
 import { Box, Text } from '@mantine/core';
 import { MantineDemo } from '@mantinex/demo';
-import { CompareStylesApi } from '../styles-api/Compare.styles-api';
 
-const code = `
-import { Compare } from '@gfazioli/mantine-compare';
+const code = `import { Compare } from '@gfazioli/mantine-compare';
 import { Box, Text } from '@mantine/core';
 
 function Demo() {
   return (
-    <Compare{{props}}
-      leftLabel="Before"
-      rightLabel="After"
+    <Compare
+      disabled
+      defaultPosition={35}
       leftSection={
         <Box
           style={{
@@ -23,7 +21,7 @@ function Demo() {
             justifyContent: 'center',
           }}
         >
-          <Text size="xl" c="white" fw={700}>Before</Text>
+          <Text size="xl" c="white" fw={700}>Left</Text>
         </Box>
       }
       rightSection={
@@ -37,7 +35,7 @@ function Demo() {
             justifyContent: 'center',
           }}
         >
-          <Text size="xl" c="white" fw={700}>After</Text>
+          <Text size="xl" c="white" fw={700}>Right</Text>
         </Box>
       }
     />
@@ -45,11 +43,11 @@ function Demo() {
 }
 `;
 
-function Demo(props: any) {
+function Demo() {
   return (
     <Compare
-      leftLabel="Before"
-      rightLabel="After"
+      disabled
+      defaultPosition={35}
       leftSection={
         <Box
           style={{
@@ -62,7 +60,7 @@ function Demo(props: any) {
           }}
         >
           <Text size="xl" c="white" fw={700}>
-            Before
+            Left
           </Text>
         </Box>
       }
@@ -78,20 +76,19 @@ function Demo(props: any) {
           }}
         >
           <Text size="xl" c="white" fw={700}>
-            After
+            Right
           </Text>
         </Box>
       }
-      {...props}
     />
   );
 }
 
-export const stylesApi: MantineDemo = {
-  type: 'styles-api',
-  data: CompareStylesApi,
+export const disabled: MantineDemo = {
+  type: 'code',
   component: Demo,
   code,
   centered: true,
-  maxWidth: 340,
+  maxWidth: 540,
+  defaultExpanded: false,
 };

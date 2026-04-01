@@ -27,9 +27,16 @@ It requires **Mantine 9.x** and **React 19**.
 - 🎨 **Three interaction modes**: Drag, hover, and fixed variants
 - 📐 **Flexible angle system**: Vertical (0°), horizontal (90°), or any diagonal angle
 - 🖼️ **Any content**: Compare images, code, text, or any React nodes
+- 🏷️ **Labels**: Overlay "Before"/"After" labels on each section
 - 🔒 **Drag boundaries**: Constrain the slider range with `minDragBound`/`maxDragBound`
-- ♿ **Accessible**: Keyboard navigation (arrow keys, Home/End), ARIA slider role
+- 🎯 **Handle-only mode**: Restrict drag to the handle button only
+- 🎬 **Auto-play**: Continuous slider animation with configurable speed and easing (`linear`, `ease-in`, `ease-out`, `ease-in-out`, `spring`)
+- 🚫 **Disabled state**: Block all interactions with `disabled` prop
+- 🎛️ **Controlled & uncontrolled**: `position` prop for controlled mode, `defaultPosition` for uncontrolled
+- ♿ **Accessible**: Keyboard navigation (arrow keys, Home/End, configurable step), ARIA slider role
+- 🎨 **Slider styling**: Customizable divider color and width via `sliderColor`/`sliderWidth`
 - 🎨 **Styles API**: Full Mantine Styles API support for custom styling
+- 👁️ **Viewport detection**: `onVisible` callback when component enters the viewport
 - 📱 **Touch support**: Drag works on touch devices
 - 📦 **TypeScript**: Full type safety out of the box
 

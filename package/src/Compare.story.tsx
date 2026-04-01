@@ -385,6 +385,161 @@ export function KeyboardNavigation() {
   );
 }
 
+export function WithLabels() {
+  return (
+    <Compare
+      w={500}
+      leftLabel="Before"
+      rightLabel="After"
+      leftSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #667eea 0%, #764ba2 100%)',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text size="xl" c="white" fw={700}>
+            Left
+          </Text>
+        </Box>
+      }
+      rightSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #f093fb 0%, #f5576c 100%)',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text size="xl" c="white" fw={700}>
+            Right
+          </Text>
+        </Box>
+      }
+    />
+  );
+}
+
+export function Disabled() {
+  return (
+    <Compare
+      w={500}
+      disabled
+      defaultPosition={35}
+      leftSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #667eea 0%, #764ba2 100%)',
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      }
+      rightSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #f093fb 0%, #f5576c 100%)',
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      }
+    />
+  );
+}
+
+export function AutoPlay() {
+  return (
+    <Compare
+      w={500}
+      autoPlay
+      autoPlaySpeed={40}
+      leftLabel="Original"
+      rightLabel="Enhanced"
+      leftSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #667eea 0%, #764ba2 100%)',
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      }
+      rightSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #f093fb 0%, #f5576c 100%)',
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      }
+    />
+  );
+}
+
+export function SliderStyling() {
+  return (
+    <Compare
+      w={500}
+      sliderColor="cyan"
+      sliderWidth={4}
+      leftSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #667eea 0%, #764ba2 100%)',
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      }
+      rightSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #f093fb 0%, #f5576c 100%)',
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      }
+    />
+  );
+}
+
+export function HandleOnly() {
+  return (
+    <Compare
+      w={500}
+      handleOnly
+      leftSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #667eea 0%, #764ba2 100%)',
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      }
+      rightSection={
+        <Box
+          style={{
+            background: 'linear-gradient(45deg, #f093fb 0%, #f5576c 100%)',
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      }
+    />
+  );
+}
+
 export function WithDragBounds() {
   return (
     <Compare

@@ -1,10 +1,15 @@
 export { angle } from './Compare.demo.angle';
+export { autoPlay } from './Compare.demo.autoPlay';
 export { codeSyntax } from './Compare.demo.code';
 export { configurator } from './Compare.demo.configurator';
+export { disabled } from './Compare.demo.disabled';
 export { dragBounds } from './Compare.demo.dragBounds';
 export { fixed } from './Compare.demo.fixed';
+export { handleOnly } from './Compare.demo.handleOnly';
 export { horizontal } from './Compare.demo.horizontal';
 export { hover } from './Compare.demo.hover';
 export { keyboard } from './Compare.demo.keyboard';
+export { labels } from './Compare.demo.labels';
+export { sliderStyling } from './Compare.demo.sliderStyling';
 export { stylesApi } from './Compare.demo.stylesApi';
 export { withImage } from './Compare.demo.withImage';
