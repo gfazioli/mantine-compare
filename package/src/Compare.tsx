@@ -13,7 +13,7 @@ import {
   type BoxProps,
   type MantineRadius,
 } from '@mantine/core';
-import { useElementSize } from '@mantine/hooks';
+import { useElementSize, useMergedRef } from '@mantine/hooks';
 import {
   clampNumber,
   clipPolygonHalfPlane,
@@ -119,8 +119,9 @@ const varsResolver = createVarsResolver<CompareFactory>((_, { aspectRatio, radiu
   },
 }));
 
-export const Compare = factory<CompareFactory>((_props, ref) => {
-  const props = useProps('Compare', defaultProps, _props);
+export const Compare = factory<CompareFactory>((_props) => {
+  const { ref, ...restProps } = _props as typeof _props & { ref?: React.Ref<HTMLDivElement> };
+  const props = useProps('Compare', defaultProps, restProps);
 
   const {
     variant,
@@ -166,6 +167,8 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
     width: containerWidth,
     height: containerHeight,
   } = useElementSize<HTMLDivElement>();
+
+  const mergedRef = useMergedRef(ref as React.Ref<HTMLDivElement>, containerRef, sizeRef);
 
   const geometry = useMemo(() => {
     const width = containerWidth;
@@ -340,15 +343,7 @@ export const Compare = factory<CompareFactory>((_props, ref) => {
 
   return (
     <Box
-      ref={(node) => {
-        containerRef.current = node;
-        sizeRef.current = node;
-        if (typeof ref === 'function') {
-          ref(node);
-        } else if (ref) {
-          ref.current = node;
-        }
-      }}
+      ref={mergedRef}
       data-angle={normalizedAngle}
       data-variant={variant}
       onMouseMove={handleContainerMouseMove}
