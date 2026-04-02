@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 ## Project
-`@gfazioli/mantine-compare` — A Mantine 9 React component for side-by-side content comparison with a draggable, hoverable, or fixed split divider. Supports vertical, horizontal, and diagonal (arbitrary angle) dividers, drag boundaries, labels, auto-play with easing, disabled state, handle-only mode, viewport detection, and custom slider styling. Requires React 19 and TypeScript 6.
+`@gfazioli/mantine-compare` — A Mantine 9 React component for side-by-side content comparison with a draggable, hoverable, or fixed split divider. Supports vertical, horizontal, and diagonal (arbitrary angle) dividers, drag boundaries, labels, auto-play with easing, disabled state, handle-only mode, and custom slider styling. Requires React 19 and TypeScript 6.
 
 ## Commands
 | Command | Purpose |
@@ -90,9 +90,6 @@ The geometry is computed in `lib/compare-geometry.ts` using Sutherland-Hodgman p
 - `sliderWidth` — width in px (default 2)
 - Both exposed as CSS variables: `--compare-slider-color`, `--compare-slider-width`
 
-### Viewport detection
-`onVisible` callback fires once when the component enters the viewport via `useIntersection`.
-
 ### Accessibility
 - Slider has `role="slider"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax`, `aria-label`
 - Keyboard: Arrow keys (`keyboardStep`, default 1%), Shift+Arrow (`keyboardShiftStep`, default 10%), Home/End
@@ -109,10 +106,10 @@ The geometry is computed in `lib/compare-geometry.ts` using Sutherland-Hodgman p
 `root`, `leftSection`, `rightSection`, `slider`, `sliderLine`, `sliderButton`, `leftLabel`, `rightLabel`
 
 ### Ref handling
-`ref` is extracted from props and merged with `containerRef` (for event handling), `sizeRef` (from `useElementSize`), and `intersectionRef` (for viewport detection) via `useMergedRef`.
+`ref` is extracted from props and merged with `containerRef` (for event handling) and `sizeRef` (from `useElementSize`) via `useMergedRef`.
 
 ## Testing
-Jest with `jsdom` environment, `esbuild-jest` transform, CSS mocked via `identity-obj-proxy`. Tests use `@mantine-tests/core` render helper. `IntersectionObserver` mocked in `jsdom.mocks.cjs`.
+Jest with `jsdom` environment, `esbuild-jest` transform, CSS mocked via `identity-obj-proxy`. Tests use `@mantine-tests/core` render helper.
 
 ## Ecosystem
 This repo is part of the Mantine Extensions ecosystem, derived from the `mantine-base-component` template. See the workspace `CLAUDE.md` (in the parent directory) for:

@@ -36,7 +36,6 @@ It requires **Mantine 9.x** and **React 19**.
 - ♿ **Accessible**: Keyboard navigation (arrow keys, Home/End, configurable step), ARIA slider role
 - 🎨 **Slider styling**: Customizable divider color and width via `sliderColor`/`sliderWidth`
 - 🎨 **Styles API**: Full Mantine Styles API support for custom styling
-- 👁️ **Viewport detection**: `onVisible` callback when component enters the viewport
 - 📱 **Touch support**: Drag works on touch devices
 - 📦 **TypeScript**: Full type safety out of the box
 

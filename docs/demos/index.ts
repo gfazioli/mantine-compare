@@ -2,6 +2,7 @@ export { angle } from './Compare.demo.angle';
 export { autoPlay } from './Compare.demo.autoPlay';
 export { codeSyntax } from './Compare.demo.code';
 export { configurator } from './Compare.demo.configurator';
+export { controlled } from './Compare.demo.controlled';
 export { disabled } from './Compare.demo.disabled';
 export { dragBounds } from './Compare.demo.dragBounds';
 export { fixed } from './Compare.demo.fixed';
