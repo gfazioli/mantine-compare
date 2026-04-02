@@ -420,8 +420,8 @@ export const Compare = factory<CompareFactory>((_props) => {
       const value = projectPoint(normal, { x, y });
       const rawPosition = ((value - min) / denom) * 100;
 
-      const minBound = clampNumber(minDragBound || 0, 0, 100);
-      const maxBound = clampNumber(maxDragBound || 100, 0, 100);
+      const minBound = clampNumber(minDragBound ?? 0, 0, 100);
+      const maxBound = clampNumber(maxDragBound ?? 100, 0, 100);
       const effectiveMin = Math.min(minBound, maxBound);
       const effectiveMax = Math.max(minBound, maxBound);
 
