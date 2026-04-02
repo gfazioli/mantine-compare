@@ -395,4 +395,72 @@ describe('Compare', () => {
     // In handleOnly mode, the slider box itself has no onMouseDown
     expect(slider).toBeTruthy();
   });
+
+  // Auto-play tests
+  it('renders with data-autoplay when autoPlay is true', () => {
+    const { container } = render(
+      <Compare autoPlay leftSection={<div>Left</div>} rightSection={<div>Right</div>} />
+    );
+    expect(container.querySelector('[data-autoplay]')).toBeTruthy();
+  });
+
+  it('does not render data-autoplay when autoPlay is false', () => {
+    const { container } = render(
+      <Compare leftSection={<div>Left</div>} rightSection={<div>Right</div>} />
+    );
+    expect(container.querySelector('[data-autoplay]')).toBeNull();
+  });
+
+  it('renders with autoPlay and disabled without crashing', () => {
+    const { container } = render(
+      <Compare autoPlay disabled leftSection={<div>Left</div>} rightSection={<div>Right</div>} />
+    );
+    expect(container.firstChild).toBeTruthy();
+  });
+
+  it('renders with all autoPlayEasing options without crashing', () => {
+    const easings = ['linear', 'ease-in', 'ease-out', 'ease-in-out', 'spring'] as const;
+    for (const easing of easings) {
+      const { container } = render(
+        <Compare
+          autoPlay
+          autoPlayEasing={easing}
+          leftSection={<div>Left</div>}
+          rightSection={<div>Right</div>}
+        />
+      );
+      expect(container.firstChild).toBeTruthy();
+    }
+  });
+
+  // Angle tests
+  it('renders with angle=45 and sets data-angle', () => {
+    const { container } = render(
+      <Compare angle={45} leftSection={<div>Left</div>} rightSection={<div>Right</div>} />
+    );
+    expect(container.querySelector('[data-angle="45"]')).toBeTruthy();
+  });
+
+  it('normalizes angle=360 to 0', () => {
+    const { container } = render(
+      <Compare angle={360} leftSection={<div>Left</div>} rightSection={<div>Right</div>} />
+    );
+    expect(container.querySelector('[data-angle="0"]')).toBeTruthy();
+  });
+
+  it('renders with angle=90 (horizontal)', () => {
+    const { container } = render(
+      <Compare angle={90} leftSection={<div>Top</div>} rightSection={<div>Bottom</div>} />
+    );
+    expect(container.querySelector('[data-angle="90"]')).toBeTruthy();
+  });
+
+  // Controlled mode test
+  it('controlled position sets aria-valuenow', () => {
+    const { container } = render(
+      <Compare position={30} leftSection={<div>Left</div>} rightSection={<div>Right</div>} />
+    );
+    const slider = container.querySelector('[role="slider"]') as HTMLElement;
+    expect(slider?.getAttribute('aria-valuenow')).toBe('30');
+  });
 });

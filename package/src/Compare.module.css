@@ -37,6 +37,11 @@
   justify-content: center;
 }
 
+.slider:focus-visible {
+  outline: 2px solid var(--mantine-color-blue-5);
+  outline-offset: 2px;
+}
+
 .sliderLine {
   position: absolute;
   left: 0;
@@ -55,8 +60,12 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
-  transition: none;
+  transition: transform 150ms ease;
   pointer-events: auto;
+}
+
+.sliderButton:hover {
+  transform: translate(-50%, -50%) scale(1.1);
 }
 
 .leftLabel,
@@ -65,8 +74,8 @@
   z-index: 3;
   padding: 4px 12px;
   border-radius: var(--mantine-radius-sm);
-  background-color: rgba(0, 0, 0, 0.6);
-  color: white;
+  background-color: light-dark(rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0.15));
+  color: var(--mantine-color-white);
   font-size: var(--mantine-font-size-sm);
   font-weight: 600;
   pointer-events: none;

@@ -16,7 +16,7 @@ import {
   type MantineColor,
   type MantineRadius,
 } from '@mantine/core';
-import { useElementSize, useIntersection, useMergedRef, useUncontrolled } from '@mantine/hooks';
+import { useElementSize, useMergedRef, useUncontrolled } from '@mantine/hooks';
 import {
   clampNumber,
   clipPolygonHalfPlane,
@@ -125,9 +125,6 @@ export interface CompareProps extends BoxProps, StylesApiProps<CompareFactory> {
 
   /** Only allow drag from the handle button, not the entire slider line @default false */
   handleOnly?: boolean;
-
-  /** Called when the component enters the viewport */
-  onVisible?: () => void;
 }
 
 export type CompareFactory = Factory<{
@@ -191,7 +188,6 @@ export const Compare = factory<CompareFactory>((_props) => {
     autoPlaySpeed,
     autoPlayEasing,
     handleOnly,
-    onVisible,
     classNames,
     style,
     styles,
@@ -242,17 +238,6 @@ export const Compare = factory<CompareFactory>((_props) => {
 
   const mergedRef = useMergedRef(ref as React.Ref<HTMLDivElement>, containerRef, sizeRef);
 
-  // Viewport detection
-  const { ref: intersectionRef, entry } = useIntersection({ threshold: 0.1 });
-  const hasBeenVisible = useRef(false);
-
-  useEffect(() => {
-    if (entry?.isIntersecting && !hasBeenVisible.current) {
-      hasBeenVisible.current = true;
-      onVisible?.();
-    }
-  }, [entry?.isIntersecting, onVisible]);
-
   // Auto-play
   const autoPlayDirection = useRef(1);
   const autoPlayRaf = useRef<number>(0);
@@ -278,7 +263,9 @@ export const Compare = factory<CompareFactory>((_props) => {
     const easing = autoPlayEasing ?? 'linear';
     let lastTime = performance.now();
 
-    // Easing multiplier based on normalized position in range (0-1)
+    // Easing multiplier based on normalized position in range (0-1).
+    // Base 0.3 = minimum 30% speed to prevent stalling at edges.
+    // Range 1.7 = reaches 2.0x at peak (0.3 + 1.7). Spring uses 0.2/1.8 for wider range.
     const getEasingMultiplier = (t: number): number => {
       switch (easing) {
         case 'ease-in':
@@ -552,7 +539,7 @@ export const Compare = factory<CompareFactory>((_props) => {
 
   return (
     <Box
-      ref={useMergedRef(mergedRef, intersectionRef)}
+      ref={mergedRef}
       data-angle={normalizedAngle}
       data-variant={variant}
       data-disabled={disabled || undefined}

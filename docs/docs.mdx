@@ -108,9 +108,15 @@ Set `handleOnly` to restrict dragging to the handle button only. When enabled, c
 
 ## Auto-play
 
-Set `autoPlay` to continuously animate the slider back and forth. The animation pauses when the user hovers over the component. Control the speed with `autoPlaySpeed` (ms per 1% of movement, default 30).
+Set `autoPlay` to continuously animate the slider back and forth. The animation pauses when the user hovers over the component. Control the speed with `autoPlaySpeed` (1-100 scale, higher = faster, default 50). Choose an easing curve with `autoPlayEasing`: `linear` (default), `ease-in`, `ease-out`, `ease-in-out`, or `spring`.
 
 <Demo data={demos.autoPlay} />
+
+## Controlled position
+
+Use the `position` prop with `onPositionChange` for full control over the slider position. This allows you to sync the slider with external controls like buttons or a Mantine `Slider`.
+
+<Demo data={demos.controlled} />
 
 ## Keyboard navigation
 
