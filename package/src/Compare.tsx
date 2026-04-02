@@ -230,7 +230,7 @@ export const Compare = factory<CompareFactory>((_props) => {
       prevDefaultPosition.current = defaultPosition;
       setPosition(defaultPosition ?? 50);
     }
-  }, [defaultPosition, positionProp]);
+  }, [defaultPosition, positionProp, setPosition]);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -331,7 +331,7 @@ export const Compare = factory<CompareFactory>((_props) => {
     return () => {
       cancelAnimationFrame(autoPlayRaf.current);
     };
-  }, [autoPlay, disabled, minDragBound, maxDragBound, autoPlaySpeed, autoPlayEasing]);
+  }, [autoPlay, disabled, minDragBound, maxDragBound, autoPlaySpeed, autoPlayEasing, setPosition]);
 
   const geometry = useMemo(() => {
     const width = containerWidth;
@@ -442,24 +442,22 @@ export const Compare = factory<CompareFactory>((_props) => {
 
       setPosition(newPosition);
     },
-    [normalizedAngle, disabled, minDragBound, maxDragBound]
+    [normalizedAngle, disabled, minDragBound, maxDragBound, setPosition]
   );
 
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      updatePosition(e.clientX, e.clientY);
-    },
-    [updatePosition]
-  );
+  // Use stable refs for document listeners to avoid stale closure issues
+  const updatePositionRef = useRef(updatePosition);
+  updatePositionRef.current = updatePosition;
 
-  const handleTouchMove = useCallback(
-    (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        updatePosition(e.touches[0].clientX, e.touches[0].clientY);
-      }
-    },
-    [updatePosition]
-  );
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    updatePositionRef.current(e.clientX, e.clientY);
+  }, []);
+
+  const handleTouchMove = useCallback((e: TouchEvent) => {
+    if (e.touches.length > 0) {
+      updatePositionRef.current(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, []);
 
   const handleMouseUp = useCallback(() => {
     document.removeEventListener('mousemove', handleMouseMove);
@@ -493,7 +491,7 @@ export const Compare = factory<CompareFactory>((_props) => {
     document.addEventListener('touchend', handleTouchEnd);
   }, [variant, disabled, handleTouchMove, handleTouchEnd]);
 
-  // Cleanup document listeners on unmount to prevent memory leaks during drag
+  // Cleanup document listeners on unmount only
   useEffect(() => {
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
@@ -540,7 +538,16 @@ export const Compare = factory<CompareFactory>((_props) => {
         setPosition(newPosition);
       }
     },
-    [variant, disabled, position, minDragBound, maxDragBound, keyboardStep, keyboardShiftStep]
+    [
+      variant,
+      disabled,
+      position,
+      minDragBound,
+      maxDragBound,
+      keyboardStep,
+      keyboardShiftStep,
+      setPosition,
+    ]
   );
 
   return (
