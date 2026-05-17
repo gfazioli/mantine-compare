@@ -1,7 +1,7 @@
-import { useState } from 'react';
 import { Compare, CompareProps } from '@gfazioli/mantine-compare';
 import { Box, Image, SegmentedControl, Text } from '@mantine/core';
 import { MantineDemo } from '@mantinex/demo';
+import { useState } from 'react';
 
 const GradientLeft = () => (
   <Box

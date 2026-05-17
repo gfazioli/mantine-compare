@@ -1,7 +1,7 @@
-import { useState } from 'react';
 import { Compare } from '@gfazioli/mantine-compare';
 import { Box, Button, Group, Slider, Text } from '@mantine/core';
 import { MantineDemo } from '@mantinex/demo';
+import { useState } from 'react';
 
 const code = `import { useState } from 'react';
 import { Compare } from '@gfazioli/mantine-compare';

@@ -1,5 +1,3 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { IconArrowsLeftRight } from '@tabler/icons-react';
 import {
   ActionIcon,
   Box,
@@ -17,6 +15,8 @@ import {
   type MantineRadius,
 } from '@mantine/core';
 import { useElementSize, useMergedRef, useUncontrolled } from '@mantine/hooks';
+import { IconArrowsLeftRight } from '@tabler/icons-react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   clampNumber,
   clipPolygonHalfPlane,
