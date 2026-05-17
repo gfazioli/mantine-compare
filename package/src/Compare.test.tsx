@@ -1,6 +1,6 @@
-import React from 'react';
 import { render } from '@mantine-tests/core';
 import { fireEvent } from '@testing-library/react';
+import React from 'react';
 import { Compare } from './Compare';
 
 describe('Compare', () => {
