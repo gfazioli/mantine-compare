@@ -61,7 +61,7 @@ The `angle` prop (0-360°) controls the divider orientation:
 - `90°` = horizontal divider (top/bottom compare)
 - Any value = diagonal divider using CSS `clip-path: polygon()`
 
-The geometry is computed in `lib/compare-geometry.ts` using Sutherland-Hodgman polygon clipping.
+The geometry is computed in `package/src/lib/compare-geometry.ts` using Sutherland-Hodgman polygon clipping.
 
 ### Controlled & uncontrolled
 - **Uncontrolled**: `defaultPosition` sets the initial position. Syncs when `defaultPosition` changes at runtime.
